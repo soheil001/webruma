@@ -88,11 +88,7 @@ body{background:var(--bg);color:var(--fg);font-family:'Mikhak',Tahoma,sans-serif
 .phone .vp{position:absolute;inset:0;overflow:hidden}
 .scr .vp img{display:block;width:100%;height:auto;object-fit:fill;background:none;transition:transform 6s ease-in-out}
 .item{position:relative}
-.hint{position:absolute;left:-15px;top:38%;width:34px;padding:9px 0 7px;border-radius:99px;background:var(--acc);color:#fff;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;line-height:1.2;box-shadow:0 6px 16px #0003;z-index:4;pointer-events:none}
-.hint b{font-size:17px;line-height:1;animation:nudge 1.3s ease-in-out infinite}
-@keyframes nudge{0%,100%{transform:translateY(-3px);opacity:.5}50%{transform:translateY(4px);opacity:1}}
-@media(prefers-reduced-motion:reduce){.hint b{animation:none}}
-.stage .hint{position:static;margin-inline-start:10px;align-self:center}
+
 .stage .vp{overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
 .stage .vp::-webkit-scrollbar{display:none}
 .stage .scr .vp img{transform:none!important;transition:none}
@@ -534,7 +530,7 @@ const full=u=>!u?'':/^(https?:|data:|\/)/.test(u)?u:IMG_BASE+u;
 for(const t in PROJECTS)PROJECTS[t].forEach(p=>p.row=t);
 /* اولویت: LINKS (فقط برای عکس خود ردیف) ← img داخل پروژه ← عکس نمونه */
 const srcOf=(p,t,i)=>full(LINKS[t][i]||p.img[t])||(DEMO?mock(t,i,p.title):'');
-const HINT='<div class="hint"><b>⌄</b><span>اسکرول</span></div>';
+
 function bad(im,t,i){im.onerror=null;if(DEMO)im.src=mock(t,i,im.alt)}  /* اگر عکس لود نشد، در حالت DEMO عکس نمونه جایگزین می‌شود */
 function frame(t,s,alt,i){
   const img=`<div class="vp"><img loading="lazy" src="${s}" alt="${alt}" onerror="bad(this,'${t}',${i})"></div>`;
