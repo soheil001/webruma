@@ -533,7 +533,7 @@ const FR={laptop:LAPTOP_FRAME,monitor:MONITOR_FRAME,tablet:TABLET_FRAME};
 const full=u=>!u?'':/^(https?:|data:|\/)/.test(u)?u:IMG_BASE+u;
 for(const t in PROJECTS)PROJECTS[t].forEach(p=>p.row=t);
 /* اولویت: LINKS (فقط برای عکس خود ردیف) ← img داخل پروژه ← عکس نمونه */
-const srcOf=(p,t,i)=>full((t===p.row?LINKS[t][i]:'')||p.img[t])||(DEMO?mock(t,i,p.title):'');
+const srcOf=(p,t,i)=>full(LINKS[t][i]||p.img[t])||(DEMO?mock(t,i,p.title):'');
 const HINT='<div class="hint"><b>⌄</b><span>اسکرول</span></div>';
 function bad(im,t,i){im.onerror=null;if(DEMO)im.src=mock(t,i,im.alt)}  /* اگر عکس لود نشد، در حالت DEMO عکس نمونه جایگزین می‌شود */
 function frame(t,s,alt,i){
