@@ -538,7 +538,7 @@ function frame(t,s,alt,i){
     :`<div class="${t}"><div class="scr">${img}</div><img class="frm" src="${FR[t]}" alt=""></div>`;
 }
 for(const t in PROJECTS){
-  document.getElementById(t).innerHTML=PROJECTS[t].map((p,i)=>`<div class="item" tabindex="0" role="button" data-cat="${p.cat}" data-t="${t}" data-i="${i}">${frame(t,srcOf(p,t,i),p.title,i)}${HINT}<div class="cap">${p.title}</div></div>`).join('');
+  document.getElementById(t).innerHTML=PROJECTS[t].map((p,i)=>`<div class="item" tabindex="0" role="button" data-cat="${p.cat}" data-t="${t}" data-i="${i}">${frame(t,srcOf(p,t,i),p.title,i)}<div class="cap">${p.title}</div></div>`).join('');
 }
 document.querySelectorAll('[data-all]').forEach(a=>a.href=ALL_LINKS[a.dataset.all]||'#');
 
