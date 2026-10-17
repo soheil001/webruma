@@ -37,6 +37,18 @@ body{background:var(--bg);color:var(--fg);font-family:'Mikhak',Tahoma,sans-serif
 .chips button.on{background:linear-gradient(135deg,var(--acc),color-mix(in srgb,var(--acc) 62%,#0b0c1e));border-color:transparent;color:#fff;box-shadow:0 12px 28px -12px color-mix(in srgb,var(--acc) 80%,transparent),inset 0 1px 0 rgba(255,255,255,.18)}
 .chips button.on .ic{background:rgba(255,255,255,.18);color:#fff}
 @media(max-width:600px){.chips{gap:8px}.chips button{font-size:12.5px;padding:6px 12px 6px 6px;gap:8px}.chips button .ic{width:26px;height:26px;border-radius:8px}.chips button .ic svg{width:15px;height:15px}}
+.chips{display:block;max-width:1080px;margin:22px auto 0}
+.chips .allrow{display:flex;justify-content:center;margin-bottom:12px}
+.chips .allrow button{font-size:17px;font-weight:700;padding:10px 30px 10px 12px;border-radius:16px;gap:12px}
+.chips .allrow button .ic{width:38px;height:38px;border-radius:11px}
+.chips .allrow button .ic svg{width:21px;height:21px}
+.chips .list{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+@media(max-width:600px){
+.chips .allrow button{font-size:16px;padding:9px 26px 9px 10px}
+.chips .list{display:grid;grid-auto-flow:column;grid-template-rows:repeat(4,auto);grid-auto-columns:max-content;justify-content:start;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px 16px 14px;scroll-snap-type:x proximity}
+.chips .list::-webkit-scrollbar{display:none}
+.chips .list button{white-space:nowrap;scroll-snap-align:start}
+}
 .track{cursor:grab}
 .track.drag{cursor:grabbing;scroll-snap-type:none;user-select:none;-webkit-user-select:none}
 .track.drag .item{cursor:grabbing}
@@ -103,7 +115,7 @@ body{background:var(--bg);color:var(--fg);font-family:'Mikhak',Tahoma,sans-serif
 .stage .scr .vp img{transform:none!important;transition:none}
 .empty{display:none;text-align:center;color:var(--mut);padding:10px}
 footer{text-align:center;color:var(--mut);font-size:13px;padding:40px 16px 30px}
-@media(max-width:600px){.phone{width:190px}.laptop{width:360px}.tablet{width:290px}.monitor{width:340px}.hero{height:60vh;border-radius:22px}}
+@media(max-width:600px){.phone{width:190px}.laptop{width:360px}.tablet{width:290px}.monitor{width:340px}.hero{height:auto;aspect-ratio:var(--ar,16/9);margin:0;border-radius:0}.slide{background-size:100% 100%!important}.laptop,.monitor{width:74vw}.track{gap:16px;padding-inline:16px}}
 </style>
 </head>
 <body>
@@ -553,6 +565,7 @@ function mock(type,i,title){ /* عکس نمونه‌ی بلند (تمام صفح
 /* Hero */
 const hero=document.getElementById('hero');let cur=0,timer;
 hero.innerHTML=SLIDES.map((u,i)=>`<div class="slide${i?'':' on'}" style="background:#222 url('${u}') center/cover no-repeat"></div>`).join('')+'<div class="dots">'+SLIDES.map((_,i)=>`<button class="${i?'':'on'}" aria-label="اسلاید ${i+1}"></button>`).join('')+'</div>';
+{const im=new Image();im.onload=()=>{if(im.naturalWidth)hero.style.setProperty('--ar',im.naturalWidth+'/'+im.naturalHeight)};im.src=SLIDES[0];}
 const sl=[...hero.querySelectorAll('.slide')],dt=[...hero.querySelectorAll('.dots button')];
 function go(n){cur=(n+sl.length)%sl.length;sl.forEach((e,i)=>e.classList.toggle('on',i===cur));dt.forEach((e,i)=>e.classList.toggle('on',i===cur));clearInterval(timer);timer=setInterval(()=>go(cur+1),5000)}
 dt.forEach((b,i)=>b.onclick=()=>go(i));go(0);
@@ -613,7 +626,7 @@ document.getElementById('popx').onclick=closePop;
 /* Filter */
 const chips=document.getElementById('chips');
 const chipBtn=(k,v,on)=>`<button${on?' class="on"':''} data-c="${k}"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]||ICONS.all}</svg></span>${v}</button>`;
-chips.innerHTML=chipBtn('all','همه',true)+Object.entries(CATS).map(([k,v])=>chipBtn(k,v,false)).join('');
+chips.innerHTML='<div class="allrow">'+chipBtn('all','همه',true)+'</div><div class="list">'+Object.entries(CATS).map(([k,v])=>chipBtn(k,v,false)).join('')+'</div>';
 chips.onclick=e=>{const b=e.target.closest('button');if(!b)return;
   chips.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
   document.querySelectorAll('.item').forEach(it=>it.classList.toggle('hide',b.dataset.c!=='all'&&it.dataset.cat!==b.dataset.c));
