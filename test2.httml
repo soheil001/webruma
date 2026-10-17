@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نمونه کارها</title>
+<style>
+/* فونت میخک: به‌جای __FONT_BASE64__ همان رشته‌ی base64 قبلی را بگذار (یا src را به لینک woff2 تغییر بده) */
+@font-face{font-family:'Mikhak';src:url(data:font/woff2;base64,__FONT_BASE64__) format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+:root{--bg:#f6f7fb;--fg:#14162b;--mut:#6b6f8a;--card:#fff;--line:#e3e5f0;--acc:#6c5ce7;--dev:#14162b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0e1a;--fg:#f1f2fa;--mut:#9a9eb8;--card:#171830;--line:#272946;--dev:#050610}}
+:root[data-theme="dark"]{--bg:#0d0e1a;--fg:#f1f2fa;--mut:#9a9eb8;--card:#171830;--line:#272946;--dev:#050610}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:'Mikhak',Tahoma,sans-serif;line-height:1.7}
+/* Hero */
+.hero{position:relative;height:min(70vh,520px);overflow:hidden;margin:12px;border-radius:28px}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(24px,7vw,90px);color:#fff;opacity:0;transform:scale(1.04);transition:opacity .8s,transform 1.2s}
+.slide.on{opacity:1;transform:none}
+.slide h1{font-size:clamp(28px,5.5vw,56px);font-weight:800;line-height:1.3;max-width:640px}
+.slide p{margin-top:12px;max-width:520px;opacity:.9;font-size:clamp(14px,2vw,18px)}
+.slide a{margin-top:22px;align-self:flex-start;background:#fff;color:#14162b;padding:10px 26px;border-radius:99px;font-weight:600;text-decoration:none}
+.dots{position:absolute;bottom:18px;left:0;right:0;display:flex;justify-content:center;gap:8px}
+.dots button{width:9px;height:9px;border-radius:9px;border:0;background:#ffffff80;cursor:pointer;transition:.3s}
+.dots button.on{width:28px;background:#fff}
+
+/* Filter — استیکری و کارتونی، ولی با رنگ‌های عمیق */
+.filter{--ink:#1b1d3a;position:relative;overflow:hidden;text-align:center;padding:44px 16px 24px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .filter{--ink:#7b7fd0}}
+:root[data-theme="dark"] .filter{--ink:#7b7fd0}
+.filter::before,.filter::after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(70px);opacity:.35;pointer-events:none}
+.filter::before{background:#6c5ce7;top:-60px;right:8%}
+.filter::after{background:#e0457b;bottom:-120px;left:10%}
+.filter h2{position:relative;font-size:clamp(22px,3.2vw,32px);font-weight:800}
+.filter p{position:relative;color:var(--mut);font-size:14px;margin-top:2px}
+.chips{position:relative;z-index:1;max-width:980px;margin:28px auto 0;display:flex;flex-wrap:wrap;gap:16px 12px;justify-content:center}
+.chips button{--c:#5b4bdb;display:inline-flex;align-items:center;gap:8px;font:inherit;font-size:14px;font-weight:600;
+  padding:7px 18px 7px 8px;border-radius:18px;border:2px solid var(--ink);color:var(--fg);cursor:pointer;
+  background:color-mix(in srgb,var(--c) 16%,var(--card));box-shadow:3px 3px 0 var(--ink);
+  transform:rotate(var(--r,0deg));transition:transform .25s cubic-bezier(.3,1.6,.5,1),box-shadow .2s,background .2s,color .2s}
+.chips button i{font-style:normal;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;
+  background:var(--c);border:2px solid var(--ink);font-size:15px;transition:transform .3s}
+.chips button:nth-child(3n+1){--r:-2deg}
+.chips button:nth-child(3n+2){--r:1.5deg}
+.chips button:nth-child(3n){--r:-.8deg}
+.chips button:hover{transform:rotate(0) translateY(-4px) scale(1.04);box-shadow:5px 7px 0 var(--ink)}
+.chips button:hover i{transform:rotate(-12deg) scale(1.1)}
+.chips button:active{transform:translateY(1px);box-shadow:1px 1px 0 var(--ink)}
+.chips button:focus-visible{outline:3px solid var(--c);outline-offset:3px}
+.chips button.on{background:var(--c);color:#fff;transform:rotate(0) translateY(-3px);box-shadow:5px 6px 0 var(--ink)}
+.chips button.on i{background:#fff}
+.deco{position:absolute;pointer-events:none;z-index:0;animation:fl 7s ease-in-out infinite}
+.deco.star{width:26px;height:26px;background:#6c5ce7;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+.deco.tri{width:24px;height:22px;background:#f08c00;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.deco.ring{width:24px;height:24px;border:5px solid #e0457b;border-radius:50%}
+.deco.plus{width:22px;height:22px;background:linear-gradient(#2d8cf0,#2d8cf0) center/100% 6px no-repeat,linear-gradient(#2d8cf0,#2d8cf0) center/6px 100% no-repeat}
+.deco.wave{width:34px;height:12px;background:radial-gradient(circle at 6px 6px,transparent 4px,#0c9d8a 4.5px 7px,transparent 7.5px) 0 0/17px 12px}
+@keyframes fl{50%{transform:translateY(-10px) rotate(14deg)}}
+@media (prefers-reduced-motion:reduce){.deco{animation:none}.chips button,.chips button i{transition:none}}
+.empty{display:none;text-align:center;color:var(--mut);padding:24px}
+
+/* Rows */
+.row{padding:34px 0 6px}
+.row-h{display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,48px);margin-bottom:16px}
+.row-h h3{font-size:18px;font-weight:600}
+.arrows{display:flex;gap:8px}
+.arrows button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--fg);font-size:18px;cursor:pointer}
+.arrows button:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.track{display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px clamp(16px,4vw,48px) 28px;scrollbar-width:none;align-items:flex-end}
+.track::-webkit-scrollbar{display:none}
+.item{flex:none;scroll-snap-align:center;transition:opacity .3s,transform .3s;cursor:pointer;outline:none;position:relative}
+.item:hover,.item:focus-visible{transform:translateY(-6px)}
+.item.hide{display:none}
+.item img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center;background:#ccc}
+.cap{text-align:center;font-size:13px;color:var(--mut);margin-top:12px}
+/* iPhone */
+.phone{width:250px;aspect-ratio:9/16;background:var(--dev);border-radius:36px;padding:8px;position:relative;box-shadow:0 18px 40px #0003,inset 0 0 0 2px #444}
+.phone .scr{width:100%;height:100%;border-radius:28px;overflow:hidden;position:relative}
+.phone .scr::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:64px;height:18px;border-radius:12px;background:#000;z-index:2}
+/* Device frames: screenshot is clipped by a mask of the exact screen area */
+.laptop{width:600px;aspect-ratio:520/360;position:relative}
+.monitor{width:580px;aspect-ratio:900/700;position:relative}
+.tablet{width:400px;aspect-ratio:905/931;position:relative}
+.laptop .scr,.monitor .scr,.tablet .scr{position:absolute;inset:0;overflow:hidden;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.monitor .scr{-webkit-mask-image:var(--m-monitor);mask-image:var(--m-monitor)}
+.tablet .scr{-webkit-mask-image:var(--m-tablet);mask-image:var(--m-tablet)}
+.laptop .vp{position:absolute;overflow:hidden;left:9.615%;top:7.222%;width:79.231%;height:70.556%}
+.monitor .vp{position:absolute;overflow:hidden;left:5.778%;top:5.714%;width:88.778%;height:64.143%}
+.tablet .vp{position:absolute;overflow:hidden;left:22.099%;top:4.082%;width:70.387%;height:91.192%}
+.laptop .frm,.monitor .frm,.tablet .frm{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:none;pointer-events:none;z-index:2}
+.rh-end{display:flex;align-items:center;gap:14px}
+.all{color:var(--acc);font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap}
+.all:hover{text-decoration:underline}
+.phone .vp{position:absolute;inset:0;overflow:hidden}
+.scr .vp img{display:block;width:100%;height:auto;object-fit:fill;background:none;transition:transform 6s ease-in-out}
+/* Popup */
+.pop{display:none;position:fixed;inset:0;z-index:50;background:rgba(8,9,22,.74);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:max(14px,env(safe-area-inset-top)) 12px max(14px,env(safe-area-inset-bottom));overflow:auto}
+.pop.open{display:flex}
+.dlg{margin:auto;width:min(920px,100%);background:var(--card);border-radius:26px;padding:26px 20px 24px;position:relative}
+.x{position:absolute;top:14px;left:14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--fg);font-size:16px;cursor:pointer;z-index:5}
+.stage{display:flex;justify-content:center;align-items:flex-end;min-height:260px;padding:22px 0 10px;background:var(--bg);border-radius:18px}
+.stage .phone{width:min(260px,56%)}
+.stage .laptop,.stage .monitor{width:min(660px,86%)}
+.stage .tablet{width:min(420px,76%)}
+.stage .vp{overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
+.stage .vp::-webkit-scrollbar{display:none}
+.stage .scr .vp img{transform:none!important;transition:none}
+.devs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px 0 4px}
+.devs button{font:inherit;font-size:13px;display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:99px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.devs button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.info h2{font-size:22px;font-weight:800;margin:18px 0 12px}
+.tbl{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:14px}
+.tbl th,.tbl td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+.tbl tr:last-child th,.tbl tr:last-child td{border-bottom:0}
+.tbl th{width:34%;background:var(--bg);font-weight:600;color:var(--mut)}
+.tag{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:1px 12px;margin:2px 0 2px 6px;font-size:13px}
+.lv{display:inline-block;margin-left:14px;color:var(--mut)}
+.lv.on{color:var(--acc);font-weight:600}
+.ok{color:#00b894;font-weight:600}.no{color:var(--mut)}
+.call{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;padding:14px;border-radius:16px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600;font-size:16px}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:40px 16px 30px}
+@media(max-width:600px){
+  .phone{width:190px}.laptop{width:360px}.tablet{width:290px}.monitor{width:340px}.hero{height:60vh;border-radius:22px}
+  .chips{gap:12px 8px}.chips button{font-size:13px;padding:6px 14px 6px 6px}.chips button i{width:26px;height:26px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero"></section>
+
+<section class="filter">
+  <span class="deco star" style="top:70px;right:22%"></span>
+  <span class="deco tri" style="top:150px;left:30%;animation-delay:-2s"></span>
+  <span class="deco ring" style="bottom:70px;right:12%;animation-delay:-4s"></span>
+  <span class="deco plus" style="bottom:30px;left:40%;animation-delay:-1s"></span>
+  <span class="deco wave" style="top:110px;left:10%;animation-delay:-3s"></span>
+  <h2>حوزه کاری خود را انتخاب کنید</h2>
+  <p>نمونه کارهای مرتبط با کسب‌وکار شما</p>
+  <div class="chips" id="chips"></div>
+  <p class="empty" id="empty">برای این حوزه هنوز نمونه‌ای نداریم 🙂</p>
+</section>
+
+<section class="row"><div class="row-h"><h3>📱 نسخه موبایل</h3><div class="rh-end"><a class="all" data-all="phone" href="#">مشاهده همه ‹</a><div class="arrows"><button data-t="phone" data-d="1" aria-label="قبلی">›</button><button data-t="phone" data-d="-1" aria-label="بعدی">‹</button></div></div></div><div class="track" id="phone"></div></section>
+<section class="row"><div class="row-h"><h3>🖥️ نسخه مانیتور (PC)</h3><div class="rh-end"><a class="all" data-all="monitor" href="#">مشاهده همه ‹</a><div class="arrows"><button data-t="monitor" data-d="1" aria-label="قبلی">›</button><button data-t="monitor" data-d="-1" aria-label="بعدی">‹</button></div></div></div><div class="track" id="monitor"></div></section>
+<section class="row"><div class="row-h"><h3>💻 نسخه دسکتاپ</h3><div class="rh-end"><a class="all" data-all="laptop" href="#">مشاهده همه ‹</a><div class="arrows"><button data-t="laptop" data-d="1" aria-label="قبلی">›</button><button data-t="laptop" data-d="-1" aria-label="بعدی">‹</button></div></div></div><div class="track" id="laptop"></div></section>
+<section class="row"><div class="row-h"><h3>📲 نسخه تبلت</h3><div class="rh-end"><a class="all" data-all="tablet" href="#">مشاهده همه ‹</a><div class="arrows"><button data-t="tablet" data-d="1" aria-label="قبلی">›</button><button data-t="tablet" data-d="-1" aria-label="بعدی">‹</button></div></div></div><div class="track" id="tablet"></div></section>
+
+<div class="pop" id="pop" aria-hidden="true"><div class="dlg" role="dialog" aria-modal="true"><button class="x" id="popx" aria-label="بستن">✕</button><div class="stage" id="stage"></div><div class="devs" id="devs"></div><div class="info" id="info"></div></div></div>
+
+<footer>© نمونه کارها</footer>
+
+<script>
+/* ===== فریم دستگاه‌ها: هر __…__ را با مقدار قبلی خودت (data:image/webp;base64,… ) یا لینک عکس عوض کن ===== */
+const LAPTOP_FRAME='__LAPTOP_FRAME__';
+const MONITOR_FRAME='__MONITOR_FRAME__';
+const TABLET_FRAME='__TABLET_FRAME__';
+
+/* کلید : [عنوان، ایموجی، رنگ] — کلیدهای shop/corp/edu/food/real همان‌هایی‌اند که در پروژه‌ها استفاده شده */
+const CATS = {
+  shop:['فروشگاهی','🛍️','#5b4bdb'],     corp:['شرکتی','🏢','#2d8cf0'],
+  edu:['آموزشی','🎓','#c2255c'],         food:['رستوران و کافه','🍽️','#e5533d'],
+  real:['املاک','🏠','#d9770a'],         sport:['باشگاه ورزشی','🏋️','#2f9e44'],
+  dental:['دندانپزشکی','🦷','#0c8599'],   clinic:['پزشکی و کلینیک','🩺','#7048e8'],
+  beauty:['آرایشگاه و زیبایی','💅','#d6336c'], travel:['گردشگری و مسافرتی','✈️','#1c7ed6'],
+  wedding:['عروسی و مراسم','💍','#ae3ec9'],    car:['خودرو و نمایشگاه','🚗','#e03131'],
+  art:['هنر و گالری','🎨','#e8590c'],      photo:['عکاسی و فیلم','📷','#5f8d1a'],
+  law:['وکالت و حقوقی','⚖️','#4263eb'],    news:['خبری و مجله','📰','#1098ad'],
+  soft:['نرم‌افزار و استارتاپ','💻','#6741d9'], pet:['حیوانات خانگی','🐾','#c77700'],
+  ngo:['خیریه و NGO','🤝','#d9480f'],      factory:['صنعتی و تولیدی','🏭','#8e44ad']
+};
+
+/* =====================================================================
+   راهنما:
+   - هر ردیف ۱۰ پروژه دارد. شماره‌ی هر پروژه در کامنت بالای آن است.
+   - img: لینک عکس همان سایت در هر دستگاه. عکس خود ردیف همان عکسی است که در گالری دیده می‌شود
+     و بقیه فقط در پاپ‌آپ (آیکن‌های پایین) نمایش داده می‌شوند.
+   - level: 'pro' = حرفه‌ای ، 'semi' = نیمه‌حرفه‌ای ، 'simple' = ساده
+   - seo: true = دارای پشتیبانی سئو ، false = ندارد
+   - cat: یکی از کلیدهای CATS بالا
+   - price = طراحی و تحویل ، monthly = پشتیبانی ماهانه ، yearly = پروژه سالانه
+   ===================================================================== */
+/* عکس نمونه‌ی دسکتاپ پروژه‌ی ۱: به‌جای '' همان base64 قبلی را بگذار (خالی باشد، عکس نمونه‌ی DEMO نشان داده می‌شود) */
+const SAMPLE_DESKTOP='__SAMPLE_DESKTOP__';
+
+const IMG_BASE='http://fs3.centraldnserver.com/~planlife/pics/webruma/';
+/* LINKS روی img پروژه اولویت دارد. خالی = از img پروژه یا عکس نمونه استفاده می‌شود */
+const LINKS={
+  phone:[ 'http://fs3.centraldnserver.com/~planlife/pics/webruma/mobile/1.jpeg','','','','','','','','','' ],
+  laptop:['','','','','','','','','',''],
+  monitor:['','','','','','','','','',''],
+  tablet:['','','','','','','','','',''],
+};
+
+const DEMO=true;            /* true: عکس نمونه می‌سازد ؛ وقتی همه‌ی عکس‌ها واقعی شد false کن */
+const CALL='09393070984';
+const ALL_LINKS={phone:'#',laptop:'#',monitor:'#',tablet:'#'};
+const LEVELS={pro:'حرفه‌ای',semi:'نیمه‌حرفه‌ای',simple:'ساده'};
+const MB='http://fs3.centraldnserver.com/~planlife/pics/webruma/mobileweb/';
+const same=u=>({phone:u,laptop:u,monitor:u,tablet:u});
+
+const PROJECTS={
+
+  /* ============ 📱 موبایل ============ */
+  phone:[
+  /* 1 */ {
+    title:'سایت اقامتگاه و ویلا', cat:'real', level:'pro', seo:true,
+    img:{phone:MB+'1.jpeg', laptop:SAMPLE_DESKTOP, monitor:SAMPLE_DESKTOP, tablet:SAMPLE_DESKTOP},
+    features:['ریسپانسیو','رزرو آنلاین','گالری تصاویر','سرعت بالا','طراحی اختصاصی'],
+    jobs:['هتل و اقامتگاه','ویلا و بوم‌گردی'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 2 */ {
+    title:'سایت رستوران', cat:'food', level:'semi', seo:true,
+    img:same(MB+'2.jpeg'),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['رستوران','کافه و قنادی'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 3 */ {
+    title:'سایت حرفه‌ای', cat:'shop', level:'pro', seo:true,
+    img:{phone:MB+'3.webp', laptop:MB+'3.webp', monitor:MB+'3.webp', tablet:''},
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['فروشگاه‌های اینترنتی','پوشاک و لوازم'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 4 */ {
+    title:'سایت فروشگاهی مدرن', cat:'shop', level:'pro', seo:true,
+    img:same(MB+'4.webp'),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['فروشگاه‌های اینترنتی','پوشاک و لوازم'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 5 */ {
+    title:'سایت شرکتی', cat:'corp', level:'semi', seo:true,
+    img:same(MB+'5.webp'),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 6 */ {
+    title:'سایت آموزشی', cat:'edu', level:'pro', seo:true,
+    img:{phone:MB+'6.webp', laptop:MB+'6.webp', monitor:MB+'6.webp', tablet:''},
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['آموزشگاه‌ها','مدرسین آنلاین'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 7 */ {
+    title:'سایت رستوران', cat:'food', level:'semi', seo:true,
+    img:same(MB+'7.webp'),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['رستوران','کافه و قنادی'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 8 */ {
+    title:'سایت املاک', cat:'real', level:'pro', seo:true,
+    img:same(MB+'8.webp'),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['آژانس املاک','مشاورین ساختمان'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 9 */ {
+    title:'سایت معرفی ساده', cat:'corp', level:'simple', seo:false,
+    img:same(MB+'9.webp'),
+    features:['ریسپانسیو','فرم تماس','گالری تصاویر'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۵,۰۰۰,۰۰۰ تومان', monthly:'۵۰۰,۰۰۰ تومان', yearly:'۶,۰۰۰,۰۰۰ تومان'
+  },
+  /* 10 */ {
+    title:'سایت نیمه‌حرفه‌ای', cat:'corp', level:'semi', seo:true,
+    img:same(MB+'10.webp'),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  ],
+
+  /* ============ 💻 لپ‌تاپ ============ */
+  laptop:[
+  /* 1 */ {
+    title:'سایت اقامتگاه و ویلا', cat:'real', level:'pro', seo:true,
+    img:{phone:IMG_BASE+'mobile/1.jpeg', laptop:SAMPLE_DESKTOP, monitor:SAMPLE_DESKTOP, tablet:SAMPLE_DESKTOP},
+    features:['ریسپانسیو','رزرو آنلاین','گالری تصاویر','سرعت بالا','طراحی اختصاصی'],
+    jobs:['هتل و اقامتگاه','ویلا و بوم‌گردی'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 2 */ {
+    title:'سایت کلاسیک', cat:'corp', level:'semi', seo:true,
+    img:same(MB+'3.webp'),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 3 */ {
+    title:'فروشگاه حرفه‌ای', cat:'shop', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['فروشگاه‌های اینترنتی','پوشاک و لوازم'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 4 */ {
+    title:'فروشگاه اینترنتی', cat:'shop', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['فروشگاه‌های اینترنتی','پوشاک و لوازم'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 5 */ {
+    title:'سایت شرکتی مدرن', cat:'corp', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 6 */ {
+    title:'پلتفرم آموزشی', cat:'edu', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['آموزشگاه‌ها','مدرسین آنلاین'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 7 */ {
+    title:'سایت کافه', cat:'food', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['رستوران','کافه و قنادی'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 8 */ {
+    title:'پورتال املاک', cat:'real', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['آژانس املاک','مشاورین ساختمان'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 9 */ {
+    title:'سایت ساده', cat:'corp', level:'simple', seo:false,
+    img:same(''),
+    features:['ریسپانسیو','فرم تماس','گالری تصاویر'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۵,۰۰۰,۰۰۰ تومان', monthly:'۵۰۰,۰۰۰ تومان', yearly:'۶,۰۰۰,۰۰۰ تومان'
+  },
+  /* 10 */ {
+    title:'سایت نیمه‌حرفه‌ای', cat:'corp', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  ],
+
+  /* ============ 🖥️ مانیتور PC ============ */
+  monitor:[
+  /* 1 */ {
+    title:'سایت اقامتگاه و ویلا', cat:'real', level:'pro', seo:true,
+    img:{phone:MB+'1.jpeg', laptop:SAMPLE_DESKTOP, monitor:SAMPLE_DESKTOP, tablet:SAMPLE_DESKTOP},
+    features:['ریسپانسیو','رزرو آنلاین','گالری تصاویر','سرعت بالا','طراحی اختصاصی'],
+    jobs:['هتل و اقامتگاه','ویلا و بوم‌گردی'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 2 */ {
+    title:'پورتال کلاسیک', cat:'corp', level:'semi', seo:true,
+    img:{phone:MB+'3.webp', laptop:'', monitor:'', tablet:''},
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 3 */ {
+    title:'مارکت‌پلیس حرفه‌ای', cat:'shop', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['فروشگاه‌های اینترنتی','پوشاک و لوازم'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 4 */ {
+    title:'فروشگاه بزرگ', cat:'shop', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['فروشگاه‌های اینترنتی','پوشاک و لوازم'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 5 */ {
+    title:'سایت سازمانی', cat:'corp', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 6 */ {
+    title:'آکادمی آنلاین', cat:'edu', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['آموزشگاه‌ها','مدرسین آنلاین'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 7 */ {
+    title:'زنجیره رستوران', cat:'food', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['رستوران','کافه و قنادی'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 8 */ {
+    title:'پورتال املاک حرفه‌ای', cat:'real', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['آژانس املاک','مشاورین ساختمان'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 9 */ {
+    title:'سایت ساده', cat:'corp', level:'simple', seo:false,
+    img:same(''),
+    features:['ریسپانسیو','فرم تماس','گالری تصاویر'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۵,۰۰۰,۰۰۰ تومان', monthly:'۵۰۰,۰۰۰ تومان', yearly:'۶,۰۰۰,۰۰۰ تومان'
+  },
+  /* 10 */ {
+    title:'سایت نیمه‌حرفه‌ای', cat:'corp', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  ],
+
+  /* ============ 📲 تبلت ============ */
+  tablet:[
+  /* 1 */ {
+    title:'سایت اقامتگاه و ویلا', cat:'real', level:'pro', seo:true,
+    img:{phone:IMG_BASE+'mobile/1.jpeg', laptop:SAMPLE_DESKTOP, monitor:SAMPLE_DESKTOP, tablet:SAMPLE_DESKTOP},
+    features:['ریسپانسیو','رزرو آنلاین','گالری تصاویر','سرعت بالا','طراحی اختصاصی'],
+    jobs:['هتل و اقامتگاه','ویلا و بوم‌گردی'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 2 */ {
+    title:'سایت کلاسیک', cat:'corp', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 3 */ {
+    title:'سایت حرفه‌ای', cat:'shop', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['فروشگاه‌های اینترنتی','پوشاک و لوازم'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 4 */ {
+    title:'فروشگاه لوازم', cat:'shop', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['فروشگاه‌های اینترنتی','پوشاک و لوازم'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 5 */ {
+    title:'سایت شرکتی', cat:'corp', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 6 */ {
+    title:'کلاس آنلاین', cat:'edu', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['آموزشگاه‌ها','مدرسین آنلاین'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 7 */ {
+    title:'رستوران سنتی', cat:'food', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['رستوران','کافه و قنادی'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  /* 8 */ {
+    title:'سایت املاک', cat:'real', level:'pro', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت کامل','درگاه پرداخت','سرعت بالا','طراحی اختصاصی'],
+    jobs:['آژانس املاک','مشاورین ساختمان'],
+    price:'۲۸,۰۰۰,۰۰۰ تومان', monthly:'۲,۵۰۰,۰۰۰ تومان', yearly:'۳۰,۰۰۰,۰۰۰ تومان'
+  },
+  /* 9 */ {
+    title:'سایت معرفی', cat:'corp', level:'simple', seo:false,
+    img:same(''),
+    features:['ریسپانسیو','فرم تماس','گالری تصاویر'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۵,۰۰۰,۰۰۰ تومان', monthly:'۵۰۰,۰۰۰ تومان', yearly:'۶,۰۰۰,۰۰۰ تومان'
+  },
+  /* 10 */ {
+    title:'سایت نیمه‌حرفه‌ای', cat:'corp', level:'semi', seo:true,
+    img:same(''),
+    features:['ریسپانسیو','پنل مدیریت ساده','بلاگ','نقشه و فرم تماس'],
+    jobs:['شرکت‌ها','خدمات و مشاوره'],
+    price:'۱۲,۰۰۰,۰۰۰ تومان', monthly:'۱,۰۰۰,۰۰۰ تومان', yearly:'۱۲,۰۰۰,۰۰۰ تومان'
+  },
+  ],
+};
+
+const SLIDES = [
+  'http://fs3.centraldnserver.com/~planlife/pics/webruma/Banner1.webp',
+  'http://fs3.centraldnserver.com/~planlife/pics/webruma/Banner2.webp',
+  'http://fs3.centraldnserver.com/~planlife/pics/webruma/Banner3.webp'
+];
+/* ========================================================= */
+
+/* ماسک ناحیه‌ی صفحه‌ی مانیتور و تبلت: هر __…__ را با مقدار قبلی (data:image/png;base64,…) عوض کن */
+const MASKS={monitor:'__MASK_MONITOR__',tablet:'__MASK_TABLET__'};
+for(const k in MASKS)document.documentElement.style.setProperty('--m-'+k,'url("'+MASKS[k]+'")');
+
+const SIZE = {phone:[390,720],laptop:[1440,888],tablet:[768,1030],monitor:[1600,900]};
+function mock(type,i,title){ /* عکس نمونه‌ی بلند (تمام صفحه‌ی سایت) */
+  const [w,h0]=SIZE[type],h=Math.round(h0*2.8),hue=(i*37+(type==='laptop'?120:type==='tablet'?240:0))%360;
+  let b=`<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${hue},75%,58%)"/><stop offset="1" stop-color="hsl(${hue+50},75%,45%)"/></linearGradient></defs><rect width="${w}" height="${h}" fill="#f4f5fa"/><rect width="${w}" height="${h0*.07}" fill="#fff"/><rect x="${w*.05}" y="${h0*.022}" width="${w*.12}" height="${h0*.026}" rx="6" fill="url(#g)"/><rect x="${w*.04}" y="${h0*.1}" width="${w*.92}" height="${h0*.34}" rx="${w*.025}" fill="url(#g)"/><text x="${w/2}" y="${h0*.28}" font-size="${w*.055}" font-family="Tahoma,sans-serif" font-weight="700" fill="#fff" text-anchor="middle">${title}</text>`;
+  for(let k=0;k<4;k++){const y=h0*(.48+k*.5);
+    b+=[0,1,2].map(c=>`<rect x="${w*(.04+c*.32)}" y="${y}" width="${w*.28}" height="${h0*.2}" rx="${w*.02}" fill="#fff"/><rect x="${w*(.06+c*.32)}" y="${y+h0*.02}" width="${w*.24}" height="${h0*.11}" rx="${w*.015}" fill="hsl(${hue+c*25+k*30},60%,85%)"/>`).join('')
+      +`<rect x="${w*.04}" y="${y+h0*.24}" width="${w*.92}" height="${h0*.05}" rx="8" fill="#fff"/><rect x="${w*.04}" y="${y+h0*.31}" width="${w*.6}" height="${h0*.03}" rx="8" fill="#dfe1ee"/>`}
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${b}</svg>`);
+}
+
+/* Hero */
+const hero=document.getElementById('hero');let cur=0,timer;
+hero.innerHTML=SLIDES.map((u,i)=>`<div class="slide${i?'':' on'}" style="background:#222 url('${u}') center/cover no-repeat"></div>`).join('')+'<div class="dots">'+SLIDES.map((_,i)=>`<button class="${i?'':'on'}" aria-label="اسلاید ${i+1}"></button>`).join('')+'</div>';
+const sl=[...hero.querySelectorAll('.slide')],dt=[...hero.querySelectorAll('.dots button')];
+function go(n){cur=(n+sl.length)%sl.length;sl.forEach((e,i)=>e.classList.toggle('on',i===cur));dt.forEach((e,i)=>e.classList.toggle('on',i===cur));clearInterval(timer);timer=setInterval(()=>go(cur+1),5000)}
+dt.forEach((b,i)=>b.onclick=()=>go(i));go(0);
+
+/* Gallery + Popup */
+const DEV={phone:['📱','موبایل'],laptop:['💻','لپ‌تاپ'],monitor:['🖥️','PC'],tablet:['📲','تبلت']};
+const FR={laptop:LAPTOP_FRAME,monitor:MONITOR_FRAME,tablet:TABLET_FRAME};
+const full=u=>!u?'':/^(https?:|data:|\/)/.test(u)?u:IMG_BASE+u;
+for(const t in PROJECTS)PROJECTS[t].forEach(p=>p.row=t);
+/* اولویت: LINKS (فقط برای عکس خود ردیف) ← img داخل پروژه ← عکس نمونه */
+const srcOf=(p,t,i)=>full(LINKS[t][i]||p.img[t])||(DEMO?mock(t,i,p.title):'');
+function bad(im,t,i){im.onerror=null;if(DEMO)im.src=mock(t,i,im.alt)}
+function frame(t,s,alt,i){
+  const img=`<div class="vp"><img loading="lazy" src="${s}" alt="${alt}" onerror="bad(this,'${t}',${i})"></div>`;
+  return t==='phone'?`<div class="phone"><div class="scr">${img}</div></div>`
+    :`<div class="${t}"><div class="scr">${img}</div><img class="frm" src="${FR[t]}" alt=""></div>`;
+}
+for(const t in PROJECTS){
+  document.getElementById(t).innerHTML=PROJECTS[t].map((p,i)=>`<div class="item" tabindex="0" role="button" data-cat="${p.cat}" data-t="${t}" data-i="${i}">${frame(t,srcOf(p,t,i),p.title,i)}<div class="cap">${p.title}</div></div>`).join('');
+}
+document.querySelectorAll('[data-all]').forEach(a=>a.href=ALL_LINKS[a.dataset.all]||'#');
+
+/* اسکرول خودکار عکس بلند داخل فریم: با هاور (دسکتاپ) یا وقتی کارت در دید است (موبایل) */
+function play(it,on){const im=it.querySelector('.vp img');if(!im)return;const d=Math.max(0,im.offsetHeight-im.parentElement.clientHeight);
+  im.style.transitionDuration=(on?Math.min(18,Math.max(3,d/90)):.7)+'s';im.style.transform=on?`translateY(-${d}px)`:'translateY(0)'}
+document.querySelectorAll('.item').forEach(it=>{it.onmouseenter=()=>play(it,true);it.onmouseleave=()=>play(it,false)});
+if(matchMedia('(hover:none)').matches){const io=new IntersectionObserver(es=>es.forEach(e=>play(e.target,e.intersectionRatio>.6)),{threshold:[0,.6]});document.querySelectorAll('.item').forEach(it=>io.observe(it))}
+
+const pop=document.getElementById('pop'),stage=document.getElementById('stage'),devs=document.getElementById('devs'),info=document.getElementById('info');
+let pc={};
+function row(h,v){return `<tr><th>${h}</th><td>${v}</td></tr>`}
+function showDev(d){
+  const p=PROJECTS[pc.t][pc.i];pc.d=d;
+  stage.innerHTML=frame(d,srcOf(p,d,pc.i),p.title,pc.i);
+  devs.innerHTML=Object.keys(DEV).filter(k=>srcOf(p,k,pc.i)).map(k=>`<button data-d="${k}" class="${k===d?'on':''}"><span>${DEV[k][0]}</span>${DEV[k][1]}</button>`).join('');
+  const tags=a=>a.map(x=>`<span class="tag">${x}</span>`).join('');
+  info.innerHTML=`<h2>${p.title}</h2><table class="tbl">`
+    +row('مشخصات سایت',tags(p.features))
+    +row('مناسب شغل‌های',tags(p.jobs))
+    +row('پشتیبانی سئو',p.seo?'<span class="ok">✔ دارد</span>':'<span class="no">✘ ندارد</span>')
+    +row('سطح سایت',Object.keys(LEVELS).map(k=>`<span class="lv${p.level===k?' on':''}">${p.level===k?'☑':'☐'} ${LEVELS[k]}</span>`).join(''))
+    +row('قیمت طراحی و تحویل',p.price)
+    +row('پشتیبانی ماهانه',p.monthly)
+    +row('پروژه سالانه',p.yearly)
+    +`</table><a class="call" href="tel:${CALL}">📞 تماس: ${CALL}</a>`;
+}
+function openPop(t,i){pc={t,i};showDev(t);pop.classList.add('open');pop.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
+function closePop(){pop.classList.remove('open');pop.setAttribute('aria-hidden','true');document.body.style.overflow=''}
+document.addEventListener('click',e=>{const it=e.target.closest('.item');if(it)openPop(it.dataset.t,+it.dataset.i)});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closePop();
+  if(e.key==='Enter'&&e.target.classList&&e.target.classList.contains('item'))openPop(e.target.dataset.t,+e.target.dataset.i);
+});
+devs.onclick=e=>{const b=e.target.closest('button');if(b)showDev(b.dataset.d)};
+pop.onclick=e=>{if(e.target===pop)closePop()};
+document.getElementById('popx').onclick=closePop;
+
+/* Filter */
+const chips=document.getElementById('chips'),emptyMsg=document.getElementById('empty');
+chips.innerHTML=`<button class="on" data-c="all" style="--c:#5b4bdb"><i>✨</i>همه</button>`
+  +Object.entries(CATS).map(([k,[l,e,c]])=>`<button data-c="${k}" style="--c:${c}"><i>${e}</i>${l}</button>`).join('');
+chips.onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  chips.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+  let n=0;
+  document.querySelectorAll('.item').forEach(it=>{
+    const hide=b.dataset.c!=='all'&&it.dataset.cat!==b.dataset.c;
+    it.classList.toggle('hide',hide);if(!hide)n++;
+  });
+  emptyMsg.style.display=n?'none':'block';
+  document.querySelectorAll('.track').forEach(t=>t.scrollTo({left:0}));};
+
+/* Arrows (RTL-safe) */
+document.querySelectorAll('.arrows button').forEach(b=>b.onclick=()=>{
+  const t=document.getElementById(b.dataset.t);
+  t.scrollBy({left:-Number(b.dataset.d)*t.clientWidth*.7,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
