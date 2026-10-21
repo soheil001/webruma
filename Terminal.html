@@ -72,6 +72,10 @@ const script=[
   "const app = express();",
   "app.use(cors());",
   "app.use(express.json());",
+  "app.use((req, res, next) => {",
+  "  console.log(`${req.method} ${req.url}`);",
+  "  next();",
+  "});",
   "",
   "const tasks = [];",
   "",
@@ -83,6 +87,32 @@ const script=[
   "  const task = { id: Date.now(), title: req.body.title, done: false };",
   "  tasks.push(task);",
   "  res.status(201).json(task);",
+  "});",
+  "",
+  "app.patch('/api/tasks/:id', (req, res) => {",
+  "  const task = tasks.find(t => t.id === Number(req.params.id));",
+  "  if (!task) return res.status(404).json({ error: 'Not found' });",
+  "  Object.assign(task, req.body);",
+  "  res.json(task);",
+  "});",
+  "",
+  "app.delete('/api/tasks/:id', (req, res) => {",
+  "  const i = tasks.findIndex(t => t.id === Number(req.params.id));",
+  "  if (i === -1) return res.sendStatus(404);",
+  "  tasks.splice(i, 1);",
+  "  res.sendStatus(204);",
+  "});",
+  "",
+  "function stats() {",
+  "  const done = tasks.filter(t => t.done).length;",
+  "  return { total: tasks.length, done, pending: tasks.length - done };",
+  "}",
+  "",
+  "app.get('/api/stats', (req, res) => res.json(stats()));",
+  "",
+  "app.use((err, req, res, next) => {",
+  "  console.error(err.stack);",
+  "  res.status(500).json({ error: 'Something broke' });",
   "});",
   "",
   "app.listen(3000, () => console.log('Server ready on :3000'));"
@@ -111,24 +141,24 @@ async function run(){
   for(const it of script){
     if(it.k==='cmd'){
       const t=promptLine();t.appendChild(cur);
-      await sleep(400);
-      await type(t,it.t,v=>{t.textContent=v},28,70);
-      cur.remove();await sleep(300);
+      await sleep(120);
+      await type(t,it.t,v=>{t.textContent=v},6,18);
+      cur.remove();await sleep(90);
     }else if(it.k==='out'){
       const d=document.createElement('div');d.className='ln '+(it.c||'out');d.textContent=it.t;
-      S.appendChild(d);down();await sleep(550);
+      S.appendChild(d);down();await sleep(160);
     }else{
       for(let i=0;i<it.t.length;i++){
         const d=document.createElement('div');d.className='ln code';
         d.innerHTML=`<span class="num">${i+1}</span><span class="txt"></span>`;
         const t=d.querySelector('.txt');S.appendChild(d);
         const line=it.t[i];
-        if(line)await type(t,line,v=>{t.innerHTML=hl(v)},10,26);
-        else{t.innerHTML=' ';await sleep(90)}
-        cur.remove();down();await sleep(70);
+        if(line)await type(t,line,v=>{t.innerHTML=hl(v)},1,7);
+        else{t.innerHTML=' ';await sleep(20)}
+        cur.remove();down();await sleep(15);
       }
       S.appendChild(Object.assign(document.createElement('div'),{className:'gap'}));
-      await sleep(600);
+      await sleep(200);
     }
   }
   const t=promptLine();t.appendChild(cur);down();
