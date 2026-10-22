@@ -177,6 +177,113 @@ footer{text-align:center;color:var(--mut);font-size:13px;padding:40px 16px 30px}
 @media(max-width:820px){.vs{margin:10px max(10px,env(safe-area-inset-right)) 10px max(10px,env(safe-area-inset-left));border-radius:18px}}
 @media(max-width:380px){.vs-bar span{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.vs *,.vs *::before{animation-duration:.01s!important;animation-iteration-count:1!important}}
+
+  /* ===== چت‌بات شناور (Floating contact widget) ===== */
+  .contact-widget {
+    position: fixed; z-index: 999999; right: 24px; bottom: 24px; direction: rtl;
+    font-family: "Vazirmatn", Tahoma, sans-serif; color: #f7f8ff;
+  }
+  .contact-widget *, .contact-widget *::before, .contact-widget *::after { box-sizing: border-box; }
+  .contact-widget .contact-panel {
+    width: min(365px, calc(100vw - 32px)); margin-bottom: 15px; padding: 19px;
+    border: 1px solid rgba(137, 164, 255, .28); border-radius: 28px;
+    background: linear-gradient(145deg, rgba(18, 28, 61, .96), rgba(8, 15, 35, .94));
+    box-shadow: 0 24px 75px rgba(0, 0, 0, .48), 0 0 35px rgba(92, 76, 255, .15), inset 0 1px rgba(255,255,255,.08);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    transform-origin: bottom right; opacity: 0; transform: translateY(14px) scale(.94);
+    visibility: hidden; pointer-events: none;
+    transition: opacity .28s ease, transform .32s cubic-bezier(.2,.8,.2,1), visibility .28s;
+  }
+  .contact-widget.is-open .contact-panel { opacity: 1; transform: translateY(0) scale(1); visibility: visible; pointer-events: auto; }
+  .contact-widget .panel-top { display: flex; align-items: flex-start; gap: 13px; padding: 3px 1px 18px; }
+  .contact-widget .bot-avatar {
+    flex: 0 0 78px; height: 78px; display: grid; place-items: center; position: relative; border-radius: 25px;
+    background: radial-gradient(circle at 35% 25%, #4b9bff, #2425a2 58%, #17163c);
+    border: 1px solid rgba(142, 166, 255, .5);
+    box-shadow: 0 8px 24px rgba(42, 92, 255, .3), inset 0 1px 9px rgba(255,255,255,.22); font-size: 40px;
+  }
+  .contact-widget .bot-avatar::after {
+    content: ""; position: absolute; width: 10px; height: 10px; right: -3px; bottom: 5px; border-radius: 50%;
+    background: #35f0a2; border: 3px solid #111a3a; box-shadow: 0 0 12px #35f0a2;
+  }
+  .contact-widget .intro { flex: 1; min-width: 0; padding-top: 2px; }
+  .contact-widget .intro h2 { font-size: 20px; line-height: 1.5; margin: 0 0 5px; font-weight: 800; color: #f7f8ff; }
+  .contact-widget .intro p { color: #b8c5ed; font-size: 12.5px; line-height: 1.9; margin: 0; }
+  .contact-widget .close-panel {
+    border: 0; color: #cbd6ff; background: transparent; cursor: pointer; font-size: 22px; line-height: 1; padding: 0 2px;
+  }
+  .contact-widget .options { display: grid; gap: 10px; }
+  .contact-widget .contact-option {
+    width: 100%; display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 11px 12px;
+    border-radius: 22px; text-decoration: none; color: #f7f8ff;
+    background: linear-gradient(110deg, rgba(255,255,255,.035), rgba(91,116,191,.09));
+    border: 1px solid rgba(132, 157, 255, .22);
+    transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
+    cursor: pointer; text-align: right; font: inherit;
+  }
+  .contact-widget .contact-option:hover, .contact-widget .contact-option:focus-visible {
+    transform: translateX(-4px); border-color: rgba(128, 143, 255, .75);
+    background: linear-gradient(110deg, rgba(116, 80, 255, .14), rgba(35, 166, 255, .1));
+    box-shadow: 0 8px 25px rgba(51, 83, 204, .12); outline: none;
+  }
+  .contact-widget .option-icon {
+    flex: 0 0 49px; height: 49px; border-radius: 17px; display: grid; place-items: center; color: white;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.35), 0 6px 17px rgba(0,0,0,.22);
+  }
+  .contact-widget .option-icon svg { width: 25px; height: 25px; }
+  .contact-widget .chat-icon { background: linear-gradient(145deg, #a45cff, #5c2af2); }
+  .contact-widget .whatsapp-icon { background: linear-gradient(145deg, #30e88c, #00a96b); }
+  .contact-widget .telegram-icon { background: linear-gradient(145deg, #36d4ff, #087ce8); }
+  .contact-widget .phone-icon { background: linear-gradient(145deg, #ff70c4, #e32b93); }
+  .contact-widget .option-copy { flex: 1; min-width: 0; }
+  .contact-widget .option-copy strong { display: block; font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .contact-widget .option-copy small { display: block; color: #b8c5ed; font-size: 11px; line-height: 1.7; }
+  .contact-widget .option-arrow { color: #9eb5ff; font-size: 22px; transition: transform .2s ease; }
+  .contact-widget .contact-option:hover .option-arrow { transform: translateX(-3px); }
+  .contact-widget .panel-footer {
+    display: flex; justify-content: center; align-items: center; gap: 8px; padding-top: 17px; color: #9daee2; font-size: 11px;
+  }
+  .contact-widget .footer-heart { color: #a36aff; font-size: 15px; }
+  .contact-widget .footer-line { height: 1px; width: 28px; background: linear-gradient(90deg, transparent, #5f6fb5); }
+  .contact-widget .footer-line:last-child { transform: rotate(180deg); }
+  .contact-widget .launcher-wrap { display: flex; align-items: center; gap: 12px; justify-content: flex-start; }
+  .contact-widget .launcher-hint {
+    padding: 9px 13px; border-radius: 14px; color: #dfe6ff; font-size: 12px; background: rgba(15, 24, 53, .8);
+    border: 1px solid rgba(131, 151, 255, .2); box-shadow: 0 8px 25px rgba(0,0,0,.2);
+    opacity: 1; transform: translateX(0); transition: opacity .2s ease, transform .2s ease; white-space: nowrap;
+  }
+  .contact-widget.is-open .launcher-hint { opacity: 0; transform: translateX(8px); pointer-events: none; }
+  .contact-widget .launcher {
+    width: 70px; height: 70px; flex: 0 0 70px; border-radius: 24px; display: grid; place-items: center; position: relative;
+    cursor: pointer; border: 1px solid rgba(178, 176, 255, .8); color: white;
+    background: radial-gradient(circle at 30% 20%, #9b8aff, #5a36f5 54%, #2417a4);
+    box-shadow: 0 0 0 6px rgba(97, 77, 255, .1), 0 0 0 1px rgba(93, 151, 255, .35), 0 12px 32px rgba(72, 57, 244, .42), inset 0 2px 7px rgba(255,255,255,.38);
+    transition: transform .25s ease, border-radius .25s ease, box-shadow .25s ease; padding: 0;
+  }
+  .contact-widget .launcher:hover { transform: translateY(-3px); }
+  .contact-widget .launcher:focus-visible { outline: 3px solid #a9c9ff; outline-offset: 5px; }
+  .contact-widget .launcher svg { width: 33px; height: 33px; transition: transform .25s ease; }
+  .contact-widget.is-open .launcher { border-radius: 50%; transform: rotate(-8deg); }
+  .contact-widget.is-open .launcher svg { transform: rotate(8deg); }
+  .contact-widget .launcher-ping {
+    position: absolute; width: 13px; height: 13px; top: -2px; right: -1px; border-radius: 50%;
+    background: #36f2a0; border: 3px solid #0b1230; box-shadow: 0 0 13px rgba(54,242,160,.8);
+  }
+  .contact-widget.is-open .launcher-ping { display: none; }
+  .contact-widget .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  @media (max-width: 480px) {
+    .contact-widget { right: 14px; bottom: 14px; }
+    .contact-widget .contact-panel { padding: 15px; border-radius: 24px; margin-bottom: 12px; }
+    .contact-widget .bot-avatar { flex-basis: 64px; height: 64px; border-radius: 21px; font-size: 33px; }
+    .contact-widget .intro h2 { font-size: 18px; }
+    .contact-widget .contact-option { min-height: 69px; padding: 9px 10px; border-radius: 19px; }
+    .contact-widget .option-icon { flex-basis: 45px; height: 45px; border-radius: 15px; }
+    .contact-widget .launcher { width: 62px; height: 62px; flex-basis: 62px; border-radius: 21px; }
+    .contact-widget .launcher-hint { font-size: 11px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .contact-widget, .contact-widget * { transition-duration: .01ms !important; }
+  }
 </style>
 </head>
 <body>
@@ -597,5 +704,128 @@ document.querySelectorAll('.track').forEach(t=>{
   else onView(true);
 })();
 </script>
+
+<!-- ===== چت‌بات شناور ===== -->
+<div class="contact-widget" id="contactWidget">
+  <section class="contact-panel" id="contactPanel" aria-label="راه‌های ارتباط با ما" aria-hidden="true">
+    <div class="panel-top">
+      <div class="bot-avatar" aria-hidden="true">🤖</div>
+      <div class="intro">
+        <h2>سلام! خوش اومدی</h2>
+        <p>به وب‌سایت ما خوش آمدی.<br>چطور می‌تونیم کمکت کنیم؟</p>
+      </div>
+      <button class="close-panel" id="closeContact" type="button" aria-label="بستن منو">×</button>
+    </div>
+
+    <div class="options">
+      <button class="contact-option" type="button" data-action="chat">
+        <span class="option-icon chat-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2 1-4.2A7.5 7.5 0 1 1 20 11.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>
+        </span>
+        <span class="option-copy"><strong>چت آنلاین</strong><small>پاسخ سریع از طریق سایت</small></span>
+        <span class="option-arrow" aria-hidden="true">‹</span>
+      </button>
+
+      <a class="contact-option" href="https://wa.me/905437333582" target="_blank" rel="noopener noreferrer">
+        <span class="option-icon whatsapp-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20.2 11.7a8.2 8.2 0 0 1-12.1 7.2L3 20l1.2-4.8A8.2 8.2 0 1 1 20.2 11.7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.2 7.8c.3-.6.6-.6 1-.6h.4c.2 0 .4.1.5.4l.8 1.8c.1.3.1.5-.1.7l-.6.7c-.2.2-.2.4 0 .7.5.9 1.2 1.6 2.1 2.1.3.2.5.2.7 0l.8-.9c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.5 0 .5-.2 1.2-.7 1.6-.5.4-1.2.6-2 .4-1-.2-2.3-.8-3.7-2-1.2-1.1-2.1-2.5-2.4-3.5-.3-1 .1-2 .4-2.5Z" fill="currentColor"/></svg>
+        </span>
+        <span class="option-copy"><strong>واتس‌اپ</strong><small>در کمترین زمان با ما در ارتباط باش</small></span>
+        <span class="option-arrow" aria-hidden="true">‹</span>
+      </a>
+
+      <a class="contact-option" href="https://t.me/planlifeir" target="_blank" rel="noopener noreferrer">
+        <span class="option-icon telegram-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 4.5 18.5 20c-.2 1.1-.8 1.4-1.7.9l-4.8-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.4-4.9 8.9-8c.4-.4-.1-.6-.6-.2L6.4 13.9l-4.7-1.5c-1-.3-1-1 .2-1.5L20.2 3.5c.9-.3 1.7.2 1.5 1Z"/></svg>
+        </span>
+        <span class="option-copy"><strong>تلگرام</strong><small>ارسال پیام در تلگرام</small></span>
+        <span class="option-arrow" aria-hidden="true">‹</span>
+      </a>
+
+      <a class="contact-option" href="tel:+989393070984">
+        <span class="option-icon phone-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 2.8 9.4 2c.7-.2 1.4.2 1.6.9l1.2 3.5c.2.6 0 1.2-.5 1.6l-1.8 1.3a14.7 14.7 0 0 0 4.8 4.8l1.3-1.8c.4-.5 1-.7 1.6-.5l3.5 1.2c.7.2 1.1.9.9 1.6l-.8 2.8c-.2.7-.8 1.1-1.5 1.1C10.4 18.5 5.5 13.6 5.5 7.3c0-.7.4-1.3 1.1-1.5Z" transform="translate(-1 -1)"/></svg>
+        </span>
+        <span class="option-copy"><strong>تماس تلفنی</strong><small>پشتیبانی سریع و مستقیم</small></span>
+        <span class="option-arrow" aria-hidden="true">‹</span>
+      </a>
+    </div>
+    <div class="panel-footer"><span class="footer-line"></span><span class="footer-heart">♥</span><span>همیشه در کنار شما هستیم</span><span class="footer-line"></span></div>
+  </section>
+
+  <div class="launcher-wrap">
+    <span class="launcher-hint">سوالی داری؟ با ما صحبت کن</span>
+    <button class="launcher" id="contactLauncher" type="button" aria-label="باز کردن راه‌های ارتباطی" aria-expanded="false" aria-controls="contactPanel">
+      <span class="launcher-ping" aria-hidden="true"></span>
+      <svg id="launcherIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2 1-4.2A7.5 7.5 0 1 1 20 11.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const widget = document.getElementById('contactWidget');
+  const launcher = document.getElementById('contactLauncher');
+  const panel = document.getElementById('contactPanel');
+  const closeButton = document.getElementById('closeContact');
+  const launcherIcon = document.getElementById('launcherIcon');
+
+  const chatIcon = `
+    <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2 1-4.2A7.5 7.5 0 1 1 20 11.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>`;
+  const xIcon = `<path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`;
+
+  function setOpen(open) {
+    widget.classList.toggle('is-open', open);
+    launcher.setAttribute('aria-expanded', String(open));
+    launcher.setAttribute('aria-label', open ? 'بستن راه‌های ارتباطی' : 'باز کردن راه‌های ارتباطی');
+    panel.setAttribute('aria-hidden', String(!open));
+    launcherIcon.innerHTML = open ? xIcon : chatIcon;
+  }
+  launcher.addEventListener('click', () => setOpen(!widget.classList.contains('is-open')));
+  closeButton.addEventListener('click', () => { setOpen(false); launcher.focus(); });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && widget.classList.contains('is-open')) {
+      setOpen(false); launcher.focus();
+    }
+  });
+  document.addEventListener('click', event => {
+    if (!widget.contains(event.target)) setOpen(false);
+  });
+
+  // دکمه «چت آنلاین» → باز کردن پنجره Tawk.to
+  document.querySelector('[data-action="chat"]').addEventListener('click', () => {
+    setOpen(false);
+    if (window.Tawk_API && typeof Tawk_API.maximize === 'function') {
+      Tawk_API.showWidget();
+      Tawk_API.maximize();
+    } else {
+      alert('چت آنلاین در حال بارگذاری است. لطفاً چند لحظه دیگر دوباره تلاش کنید.');
+    }
+  });
+})();
+</script>
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+// دکمه پیش‌فرض Tawk پنهان می‌شود؛ فقط از دکمه «چت آنلاین» باز می‌شود
+Tawk_API.onLoad = function () { Tawk_API.hideWidget(); };
+// وقتی پنجره چت بسته شد، حباب پیش‌فرض دوباره پنهان شود
+Tawk_API.onChatMinimized = function () { Tawk_API.hideWidget(); };
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6ad8eee2f8c16c345940fb58/1k5fmaad9';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+
 </body>
 </html>
