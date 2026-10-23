@@ -44,7 +44,8 @@ body{background:var(--bg);color:var(--fg);font-family:'Gozaar',Tahoma,sans-serif
 .chips .list::-webkit-scrollbar{display:none}
 .chips .list button{white-space:nowrap;scroll-snap-align:start}
 }
-.track{cursor:grab}
+.track{cursor:grab;scroll-behavior:auto}
+.track.drag{scroll-behavior:auto}
 .track.drag{cursor:grabbing;scroll-snap-type:none;user-select:none;-webkit-user-select:none}
 .track.drag .item{cursor:grabbing}
 .track img{-webkit-user-drag:none;user-select:none}
@@ -288,13 +289,35 @@ footer{text-align:center;color:var(--mut);font-size:13px;padding:40px 16px 30px}
   }
   @media (max-width: 600px) {
     .contact-widget { left: 10px; right: auto; bottom: 12px; }
-    .contact-widget .launcher-wrap { align-items: flex-start; }
-    .contact-widget .contact-panel { transform-origin: bottom left; }
+    .contact-widget .launcher-wrap { align-items: flex-end; } /* در RTL یعنی سمت چپ */
+    .contact-widget .contact-panel { width: min(292px, calc(100vw - 20px)); padding: 12px; border-radius: 20px; margin-bottom: 10px; transform-origin: bottom left; }
+    .contact-widget .panel-top { gap: 10px; padding: 0 0 10px; align-items: center; }
+    .contact-widget .bot-avatar { flex: 0 0 48px; height: 48px; border-radius: 16px; font-size: 25px; }
+    .contact-widget .bot-avatar::after { width: 8px; height: 8px; border-width: 2px; right: -2px; bottom: 3px; }
+    .contact-widget .intro { padding-top: 0; }
+    .contact-widget .intro h2 { font-size: 15px; margin: 0 0 2px; }
+    .contact-widget .intro p { font-size: 11px; line-height: 1.7; }
+    .contact-widget .close-panel { font-size: 20px; align-self: flex-start; }
+    .contact-widget .options { gap: 7px; }
+    .contact-widget .contact-option { min-height: 54px; padding: 7px 9px; gap: 9px; border-radius: 16px; }
+    .contact-widget .option-icon { flex-basis: 38px; height: 38px; border-radius: 12px; }
+    .contact-widget .option-icon svg { width: 20px; height: 20px; }
+    .contact-widget .option-copy strong { font-size: 12.5px; margin-bottom: 1px; }
+    .contact-widget .option-copy small { font-size: 10px; line-height: 1.5; }
+    .contact-widget .option-arrow { font-size: 18px; }
+    .contact-widget .panel-footer { padding-top: 10px; font-size: 10px; gap: 6px; }
+    .contact-widget .footer-heart { font-size: 12px; }
+    .contact-widget .footer-line { width: 18px; }
     .contact-widget .launcher-hint { display: none; }
     .contact-widget .launcher { width: 54px; height: 54px; flex-basis: 54px; border-radius: 18px; box-shadow: 0 0 0 3px rgba(97,77,255,.1), 0 6px 16px rgba(72,57,244,.4), inset 0 1px 4px rgba(255,255,255,.35); }
     .contact-widget .launcher svg { width: 27px; height: 27px; }
     .contact-widget .launcher-ping { width: 11px; height: 11px; border-width: 2px; top: -2px; right: -2px; }
   }
+  /* ایکن چت: همیشه سمت چپ سایت (همه اندازه‌ها) */
+  .contact-widget { left: 24px !important; right: auto !important; }
+  .contact-widget .launcher-wrap { direction: ltr; align-items: flex-start !important; }
+  .contact-widget .contact-panel { transform-origin: bottom left; }
+  @media (max-width: 600px) { .contact-widget { left: 10px !important; } }
   @media (prefers-reduced-motion: reduce) {
     .contact-widget, .contact-widget * { transition-duration: .01ms !important; }
   }
@@ -674,7 +697,7 @@ document.querySelectorAll('.arrows button').forEach(b=>b.onclick=()=>{
 document.querySelectorAll('.track').forEach(t=>{
   let down=false,moved=false,sx=0,sl=0;
   t.addEventListener('pointerdown',e=>{
-    if(e.pointerType!=='mouse'||e.button!==0)return;
+    if(e.pointerType==='touch'||e.button!==0)return;
     down=true;moved=false;sx=e.clientX;sl=t.scrollLeft;
   });
   window.addEventListener('pointermove',e=>{
@@ -687,6 +710,8 @@ document.querySelectorAll('.track').forEach(t=>{
   window.addEventListener('pointerup',end);
   window.addEventListener('pointercancel',end);
   t.addEventListener('dragstart',e=>e.preventDefault());
+  /* چرخ ماوس معمولی (عمودی) روی ردیف: با Shift یا تاچ‌پد افقی خودش اسکرول می‌کند؛ اینجا فقط اسکرول افقیِ غالب را آزاد می‌گذاریم */
+  t.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.stopPropagation()}},{passive:true});
   /* بعد از کشیدن، کلیک اتفاقی روی کارت پاپ‌آپ باز نکند */
   t.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false}},true);
 });
