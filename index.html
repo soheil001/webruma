@@ -313,11 +313,11 @@ footer{text-align:center;color:var(--mut);font-size:13px;padding:40px 16px 30px}
     .contact-widget .launcher svg { width: 27px; height: 27px; }
     .contact-widget .launcher-ping { width: 11px; height: 11px; border-width: 2px; top: -2px; right: -2px; }
   }
-  /* ایکن چت: همیشه سمت چپ سایت (همه اندازه‌ها) */
-  .contact-widget { left: 24px !important; right: auto !important; }
-  .contact-widget .launcher-wrap { direction: ltr; align-items: flex-start !important; }
-  .contact-widget .contact-panel { transform-origin: bottom left; }
-  @media (max-width: 600px) { .contact-widget { left: 10px !important; } }
+  /* ایکن چت: همیشه سمت راست سایت (همه اندازه‌ها) */
+  .contact-widget { right: 24px !important; left: auto !important; }
+  .contact-widget .launcher-wrap { direction: ltr; align-items: flex-end !important; }
+  .contact-widget .contact-panel { transform-origin: bottom right; }
+  @media (max-width: 600px) { .contact-widget { right: 10px !important; left: auto !important; } }
   @media (prefers-reduced-motion: reduce) {
     .contact-widget, .contact-widget * { transition-duration: .01ms !important; }
   }
@@ -326,6 +326,25 @@ footer{text-align:center;color:var(--mut);font-size:13px;padding:40px 16px 30px}
   .chat-head.overlay { border: 0; border-radius: 0; }
   .chat-head img { display: block; height: 128px; width: auto; max-width: 100%; pointer-events: none; user-select: none; }
   .chat-head .ch-x { position: absolute; top: 8px; left: 8px; width: 30px; height: 30px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .18); background: rgba(255, 255, 255, .07); color: #f7f8ff; font-size: 18px; line-height: 1; cursor: pointer; }
+
+/* ===== زیرمجموعه‌ی حوزه‌ها (تب‌های متنی فارسی) ===== */
+.chips button .caret{font-size:10px;opacity:.7;margin-right:-2px}
+.subs{display:none;width:calc(100% - 32px);max-width:1080px;margin:16px auto 0;padding:14px 16px 16px;border:1px solid var(--line);border-radius:20px;background:color-mix(in srgb,var(--acc) 4%,var(--card))}
+.subs.open{display:block;animation:subin .3s ease both}
+@keyframes subin{from{opacity:0;transform:translateY(-8px)}}
+.subs .st{text-align:center;color:var(--mut);font-size:13px;margin-bottom:12px}
+.subs .sl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.subs button{font:inherit;font-size:13.5px;padding:6px 16px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .2s}
+.subs button:hover{border-color:color-mix(in srgb,var(--acc) 55%,var(--line));transform:translateY(-1px)}
+.subs button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.subs button.on{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+@media(prefers-reduced-motion:reduce){.subs.open{animation:none}}
+@media(max-width:600px){
+.subs{width:calc(100% - 20px);padding:12px 0 6px}
+.subs .sl{display:grid;grid-auto-flow:column;grid-template-rows:repeat(3,auto);grid-auto-columns:max-content;justify-content:start;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 12px 8px;gap:7px}
+.subs .sl::-webkit-scrollbar{display:none}
+.subs button{white-space:nowrap;font-size:12.5px;padding:6px 13px}
+}
 </style>
 </head>
 <body>
@@ -375,6 +394,7 @@ btn.<span class="t">addEventListener</span>(<span class="s">'click'</span>, () =
   <h2>حوزه کاری خود را انتخاب کنید</h2>
   <p>نمونه کارهای مرتبط با کسب‌وکار شما</p>
   <div class="chips" id="chips"></div>
+  <div class="subs" id="subs" aria-live="polite"></div>
 </section>
 
 <section class="row"><div class="row-h"><h3>📱 نسخه موبایل</h3><div class="rh-end"><a class="all" data-all="phone" href="#">مشاهده همه ‹</a><div class="arrows"><button data-t="phone" data-d="-1" aria-label="بعدی">‹</button><button data-t="phone" data-d="1" aria-label="قبلی">›</button></div></div></div><div class="track" id="phone"></div></section>
@@ -434,6 +454,7 @@ const ICONS = {
 const IMG_BASE='http://fs3.centraldnserver.com/~planlife/pics/webruma/';
 const EXT='webp';          /* پسوند عکس‌ها */
 const PER_CAT=20;          /* تعداد عکس هر پوشه: 1.webp تا 20.webp */
+const INIT=8;  /* تعداد کارت‌هایی که اول هر ردیف فوری لود می‌شود؛ بقیه با اسکرول */
 const PER_ROW=20;          /* تعداد کارت هر ردیف در حالت «همه» (رندوم و بدون تکرار) */
 
 /* پوشه‌ی عکس هر دستگاه (داخل IMG_BASE). فعلاً همه از mobileweb می‌خوانند. '' = آن ردیف مخفی شود */
@@ -481,19 +502,75 @@ const TIER_ORDER=['pro','semi','simple'];   /* طرح ۱ حرفه‌ای ، ۲ �
 /* تغییر دستی مشخصات یک طرح خاص (اختیاری). مثال: 'shop-3':{level:'pro', price:'۳۰,۰۰۰,۰۰۰ تومان', title:'فروشگاه لوازم'} */
 const OVERRIDES={};
 
-/* ساخت خودکار همه‌ی پروژه‌ها: ۲۰ حوزه × ۲۰ طرح */
+/* ===== زیرمجموعه‌ها (تب دوم) =====
+   هر حوزه می‌تواند چند زیرمجموعه داشته باشد. عکس‌ها در این مسیر خوانده می‌شوند:
+   IMG_BASE + 'mobileweb/' + FOLDERS[حوزه] + '/' + dir + '/' + شماره + '.webp'
+   مثال:  .../mobileweb/foroshgah/laptop/1.webp  تا  20.webp
+   dir = «دقیقاً» اسم پوشه در هاست. (اگر اسم پوشه فرق داشت فقط همین dir را عوض کن)
+   برای اطمینان، اگر عکس با dir لود نشد، خودکار حالت «حروف کوچک» و «حروف کوچک با خط‌تیره» هم امتحان می‌شود. */
+const SUBS={
+  shop:[
+    {k:'tools',   label:'ابزارآلات و تجهیزات',       dir:'Abzaralat va Tajhizat'},
+    {k:'beauty',  label:'آرایشی و بهداشتی',           dir:'Arayeshi va Behdashti'},
+    {k:'toys',    label:'اسباب‌بازی کودک و نوجوان',   dir:'Asbab Bazi Koodak va Nojavan'},
+    {k:'digital', label:'کالای دیجیتال',              dir:'Kalaye Digital'},
+    {k:'books',   label:'کتاب و هنر',                 dir:'Ketab va Honar'},
+    {k:'car',     label:'خودرو و موتورسیکلت',         dir:'Khodro va Motorcycle'},
+    {k:'laptop',  label:'لپ‌تاپ',                      dir:'Laptop'},
+    {k:'home',    label:'لوازم خانگی برقی',           dir:'Lavazem Khanegi Barghi'},
+    {k:'local',   label:'محصولات محلی',               dir:'Mahsoolaat Mahalli'},
+    {k:'mobile',  label:'موبایل',                     dir:'Mobile'},
+    {k:'fashion', label:'مد و پوشاک',                 dir:'Mod va Pooshak'},
+    {k:'pet',     label:'پت‌شاپ',                      dir:'Pet Shop'},
+    {k:'health',  label:'سلامت و پزشکی',              dir:'Salamat va Pezeshki'},
+    {k:'market',  label:'سوپرمارکت آنلاین',           dir:'Supermarket Online'},
+    {k:'gold',    label:'طلا و نقره',                 dir:'Tala va Noghre'},
+    {k:'sport',   label:'ورزش و سفر',                 dir:'Varzesh va Safar'},
+    {k:'dry', label:'خشکبار و آجیل', dir:'Khoshkbar va Ajil'},
+    {k:'carpet', label:'فرش و قالیچه', dir:'Farsh va Ghaliche'},
+    {k:'flower', label:'گل و گیاه', dir:'Gol va Giyah'},
+    {k:'garden', label:'لوازم باغبانی', dir:'Lavazem Baghbani'},
+    {k:'decor', label:'لوازم تزئینی و دکور', dir:'Lavazem Tazeenati va Dekor'},
+    {k:'gift', label:'لوازم یادگاری و هدیه', dir:'Lavazem Yadgari va Hedye'},
+    {k:'mobacc', label:'لوازم جانبی موبایل', dir:'Lavazem Janebi Mobile'},
+    {k:'craft', label:'لوازم دستی و هنرهای دستی', dir:'Lavazem Dasti va Honarhaye Dasti'},
+    {k:'bakery', label:'لوازم شیرینی‌پزی و قنادی', dir:'Lavazem Shirinipazi va Ghannadi'},
+    {k:'camping', label:'لوازم کمپینگ و کوهنوردی', dir:'Lavazem Camping va Koohnavardi'},
+    {k:'clean', label:'لوازم نظافت و بهداشتی خانه', dir:'Lavazem Nezafat va Behdashti Khane'},
+    {k:'nuts', label:'آجیل و میوه خشک', dir:'Ajil va Mive Khoshk'},
+    {k:'saffron', label:'زعفران و ادویه‌جات', dir:'Zaferan va Adviehjat'},
+    {k:'tea', label:'چای و قهوه', dir:'Chai va Ghahve'},
+    {k:'honey', label:'عسل و محصولات قالب', dir:'Asal va Mahsolat Ghaleb'},
+    {k:'bread', label:'لوازم نان و شیرینی', dir:'Lavazem Naan va Shirini'},
+    {k:'expo', label:'لوازم نمایشگاه و تبلیغات', dir:'Lavazem Namayeshgah va Tablighat'},
+    {k:'build', label:'لوازم ساختمانی و ساخت‌وساز', dir:'Lavazem Sakhtemani va Sakht'},
+    {k:'paint', label:'لوازم هنر و نقاشی', dir:'Lavazem Honar va Naghashi'},
+    {k:'prosport', label:'لوازم ورزش‌های تخصصی', dir:'Lavazem Varzeshaye Takhasosi'},
+    {k:'perfume', label:'عطر و ادکلن', dir:'Atr va odcolon'}
+  ]
+};
+/* اگر عکس‌های 1 تا 20 که قبلاً مستقیم داخل پوشه‌ی اصلی حوزه بودند را هم می‌خواهی بماند: true کن
+   (فقط در «همه» و «همه‌ی زیرمجموعه‌ها» دیده می‌شوند) */
+const KEEP_ROOT={shop:false};
+
+/* ساخت خودکار همه‌ی پروژه‌ها: هر حوزه ۲۰ طرح ، و هر زیرمجموعه هم ۲۰ طرح */
 const ALLP=[],BYID={};
+function addP(cat,n,sub){
+  const level=TIER_ORDER[(n-1)%3],T=TIERS[level],id=cat+(sub?'-'+sub.k:'')+'-'+n;
+  const p=Object.assign({
+    id, cat, n, level, seo:T.seo, sub:sub?sub.k:'', subLabel:sub?sub.label:'', dir:sub?sub.dir:'',
+    title:CATS[cat]+(sub?' – '+sub.label:'')+' – طرح '+n.toLocaleString('fa-IR'),
+    features:T.features.concat(level==='simple'?[]:(EXTRA[cat]||[])),
+    jobs:sub?['فروشگاه‌های '+sub.label]:(JOBS[cat]||[]), price:T.price, monthly:T.monthly, yearly:T.yearly
+  },OVERRIDES[id]||{});
+  ALLP.push(p);BYID[p.id]=p;
+}
 Object.keys(FOLDERS).forEach(cat=>{
-  for(let n=1;n<=PER_CAT;n++){
-    const level=TIER_ORDER[(n-1)%3],T=TIERS[level];
-    const p=Object.assign({
-      id:cat+'-'+n, cat, n, level, seo:T.seo,
-      title:CATS[cat]+' – طرح '+n.toLocaleString('fa-IR'),
-      features:T.features.concat(level==='simple'?[]:(EXTRA[cat]||[])),
-      jobs:JOBS[cat]||[], price:T.price, monthly:T.monthly, yearly:T.yearly
-    },OVERRIDES[cat+'-'+n]||{});
-    ALLP.push(p);BYID[p.id]=p;
-  }
+  const subs=SUBS[cat];
+  if(subs){
+    subs.forEach(sub=>{for(let n=1;n<=PER_CAT;n++)addP(cat,n,sub)});
+    if(KEEP_ROOT[cat])for(let n=1;n<=PER_CAT;n++)addP(cat,n,null);
+  }else for(let n=1;n<=PER_CAT;n++)addP(cat,n,null);
 });
 
 const SLIDES = [
@@ -522,64 +599,96 @@ function blobURL(d){try{const h=d.indexOf(','),m=d.slice(5,d.indexOf(';')),b=ato
 const FR={laptop:blobURL(LAPTOP_FRAME),monitor:blobURL(MONITOR_FRAME),tablet:blobURL(TABLET_FRAME)};
 const ROWS=['phone','monitor','laptop','tablet'];
 const ST={};            /* صف پروژه‌های رزرو هر ردیف (برای جایگزینی عکس‌های ناموجود) */
-let curCat='all';
+let curCat='all',curSub='';
 
-const srcOf=(p,t)=>DEVPATH[t]?IMG_BASE+DEVPATH[t]+'/'+FOLDERS[p.cat]+'/'+p.n+'.'+EXT:'';
+/* اسم‌های ممکن برای پوشه‌ی زیرمجموعه (اولی همان dir است) */
+const dirCands=d=>[...new Set([d,d.toLowerCase(),d.toLowerCase().replace(/\s+/g,'-')])];
+/* حافظه‌ی مرورگر: عکس‌های ناموجود و اسم درست پوشه‌ها یادش می‌ماند تا دفعه‌ی بعد درخواست الکی نرود و انتخاب رندوم سریع‌تر شود */
+const MEM_KEY='wr_img_v2',BAD_TTL=30*60*1000,DIR_TTL=6*3600*1000;
+let MEM={bad:{},dir:{}},memT=0;
+try{const m=JSON.parse(localStorage.getItem(MEM_KEY));if(m&&m.bad&&m.dir)MEM=m}catch(e){}
+(function(){const n=Date.now();for(const k in MEM.bad)if(n-MEM.bad[k]>BAD_TTL)delete MEM.bad[k];for(const k in MEM.dir)if(n-MEM.dir[k][1]>DIR_TTL)delete MEM.dir[k]})();
+function saveMem(){clearTimeout(memT);memT=setTimeout(()=>{try{localStorage.setItem(MEM_KEY,JSON.stringify(MEM))}catch(e){}},500)}
+const SUBCI={};   /* زیرمجموعه ← شماره‌ی اسمی که جواب داده (بعد از اولین عکس موفق ثابت می‌شود) */
+for(const k in MEM.dir)SUBCI[k]=MEM.dir[k][0];
+const SUBFAIL={}; /* شمارنده‌ی شکست‌های کامل هر زیرمجموعه (برای تشخیص پوشه‌ی خالی) */
+const subKey=p=>p.cat+'/'+p.sub;
+const bkey=(p,t)=>(DEVPATH[t]||'')+'|'+p.id;
+const skip=(p,t)=>!!(MEM.bad[bkey(p,t)]||(p.sub&&MEM.bad['sub|'+subKey(p)]));
+function markBad(p,t){
+  MEM.bad[bkey(p,t)]=Date.now();
+  if(p.sub&&SUBCI[subKey(p)]===undefined&&(SUBFAIL[subKey(p)]=(SUBFAIL[subKey(p)]||0)+1)>=3)MEM.bad['sub|'+subKey(p)]=Date.now(); /* پوشه‌ی خالی یا اسم اشتباه */
+  saveMem();
+}
+function srcOf(p,t,ci){
+  if(!DEVPATH[t])return '';
+  const base=IMG_BASE+DEVPATH[t]+'/'+FOLDERS[p.cat]+'/';
+  if(!p.sub)return base+p.n+'.'+EXT;
+  if(ci==null)ci=SUBCI[p.cat+'/'+p.sub]||0;
+  return base+encodeURIComponent(dirCands(p.dir)[ci]||p.dir)+'/'+p.n+'.'+EXT;
+}
+/* عکس زیرمجموعه با موفقیت لود شد: همین اسم پوشه ثابت می‌شود */
+function ciOf(im,p){ /* شماره‌ی اسم پوشه‌ای که در آدرس همین عکس استفاده شده */
+  const a=(im.getAttribute('src')||'').split('/'),i=dirCands(p.dir).indexOf(decodeURIComponent(a[a.length-2]||''));
+  return i<0?0:i;
+}
+function ok(im){
+  if(!im.isConnected||!im.src||im.src.indexOf('data:')===0)return;
+  const it=im.closest('.item');if(!it)return;
+  const p=BYID[it.dataset.id];
+  if(p&&p.sub){const k=subKey(p),c=ciOf(im,p);SUBCI[k]=c;MEM.dir[k]=[c,Date.now()];delete MEM.bad['sub|'+k];saveMem()}
+}
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 
 /* ترکیب رندوم: به نوبت از همه‌ی حوزه‌ها (بدون تکرار) */
-function mixed(){
-  const by={};Object.keys(FOLDERS).forEach(c=>by[c]=shuffle(ALLP.filter(p=>p.cat===c)));
+function mixBy(list,keyf){
+  const by={};list.forEach(p=>{const k=keyf(p);(by[k]=by[k]||[]).push(p)});
+  Object.keys(by).forEach(k=>by[k]=shuffle(by[k]));
   const out=[];let more=true;
-  while(more){more=false;shuffle(Object.keys(by)).forEach(c=>{const p=by[c].pop();if(p){out.push(p);more=true}})}
+  while(more){more=false;shuffle(Object.keys(by)).forEach(k=>{const p=by[k].pop();if(p){out.push(p);more=true}})}
   return out;
 }
+const mixed=()=>mixBy(ALLP,p=>p.cat);
 
 /* اگر عکس لود نشد: در حالت DEMO عکس نمونه ، وگرنه کارت بعدی از صف جایگزین می‌شود (یا حذف می‌شود) */
 function bad(im,t){
+  if(!im.isConnected)return;
   const it=im.closest('.item');if(!it)return;
   if(DEMO&&!im.dataset.m){im.dataset.m=1;im.src=mock(t,+it.dataset.n||1,im.alt);return}
-  const nx=ST[t]&&ST[t].queue.shift();
-  if(nx){const d=document.createElement('div');d.innerHTML=itemHTML(t,nx,1);const el=d.firstElementChild;it.replaceWith(el);wire(el)}
+  const pp=BYID[it.dataset.id];
+  if(pp&&pp.sub){
+    const key=pp.cat+'/'+pp.sub,cur=ciOf(im,pp),max=dirCands(pp.dir).length;
+    if(SUBCI[key]!==undefined&&SUBCI[key]!==cur){im.src=srcOf(pp,t,SUBCI[key]);return}
+    if(SUBCI[key]===undefined&&cur+1<max){im.src=srcOf(pp,t,cur+1);return}
+  }
+  if(pp)markBad(pp,t);
+  let nx=null;
+  while(ST[t]&&(nx=ST[t].queue.shift())&&skip(nx,t));
+  if(nx){const d=document.createElement('div');d.innerHTML=itemHTML(t,nx,1,0);const el=d.firstElementChild;it.replaceWith(el);wire(el)}
   else it.remove();
 }
+/* اضافه‌کردن کارت‌های بیشتر به انتهای ردیف (فقط وقتی کاربر به انتها نزدیک می‌شود) */
+function fill(t,n){
+  const tr=document.getElementById(t),st=ST[t];if(!tr||!st)return;
+  let a=0,p;
+  while(a<n&&(p=st.queue.shift())){
+    if(skip(p,t))continue;
+    const d=document.createElement('div');d.innerHTML=itemHTML(t,p,1,9);const el=d.firstElementChild;tr.appendChild(el);wire(el);a++;
+  }
+}
+function ensure(t){const tr=document.getElementById(t);let g=0;while(g++<8&&ST[t]&&ST[t].queue.length&&tr.scrollWidth<tr.clientWidth*2)fill(t,2)}
 const PH='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 /* now=1 → عکس همان لحظه لود می‌شود (ردیف موبایل)؛ وگرنه data-src و نوبت‌دهی توسط startLoad */
 function frame(t,s,alt,err,now,k){
-  const img=`<div class="vp"><img ${now?`src="${s}" decoding="async"${k<5?' fetchpriority="high"':''}`:`data-src="${s}" src="${PH}"`} alt="${alt}" onerror="${err}"></div>`;
+  const img=`<div class="vp"><img ${now?`src="${s}" decoding="async"${k<3?' fetchpriority="high"':''}`:`data-src="${s}" src="${PH}"`} alt="${alt}" onerror="${err}" onload="ok(this)"></div>`;
   return t==='phone'?`<div class="phone"><div class="scr">${img}</div></div>`
     :`<div class="${t}"><div class="scr">${img}</div><img class="frm" src="${FR[t]}" alt=""></div>`;
 }
 const itemHTML=(t,p,now,k)=>`<div class="item" tabindex="0" role="button" data-cat="${p.cat}" data-t="${t}" data-id="${p.id}" data-n="${p.n}">${frame(t,srcOf(p,t),p.title,`bad(this,'${t}')`,now,k)}<div class="cap">${p.title}</div></div>`;
 
 /* ===== لود سریع و مرحله‌ای: اول موبایل ، بعد ردیف به ردیف به سمت پایین ===== */
-let gen=0;
-function rowDone(t){
-  const tr=document.getElementById(t);if(!tr)return Promise.resolve();
-  return Promise.all([].map.call(tr.querySelectorAll('.vp img'),(im,k)=>{
-    const s=im.getAttribute('data-src');
-    if(s){im.removeAttribute('data-src');im.decoding='async';im.fetchPriority=k<5?'high':'auto';im.src=s}
-    if(im.complete&&im.naturalWidth>1)return;
-    return new Promise(r=>{im.addEventListener('load',r,{once:true});im.addEventListener('error',r,{once:true})});
-  }));
-}
-function startLoad(){
-  const g=++gen,seen={};
-  const go=t=>{if(!seen[t]){seen[t]=rowDone(t)}return seen[t]};
-  /* اگر کاربر زودتر از لود به یک ردیف رسید، همان لحظه لودش می‌کنیم */
-  if('IntersectionObserver' in window){
-    const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&g===gen){go(e.target.id);ob.unobserve(e.target)}}),{rootMargin:'900px 0px'});
-    ROWS.forEach(t=>{const el=document.getElementById(t);if(el&&DEVPATH[t])ob.observe(el)});
-  }
-  (async()=>{
-    for(const t of ROWS){
-      if(g!==gen)return;
-      if(!DEVPATH[t])continue;
-      /* ردیف بعدی وقتی شروع می‌شود که قبلی تمام شده، یا حداکثر ۱.۵ ثانیه گذشته */
-      await Promise.race([go(t),new Promise(r=>setTimeout(r,1500))]);
-    }
-  })();
-}
+/* همه‌ی ردیف‌ها هم‌زمان و بدون صف شروع می‌کنند (فقط چند کارت اول هر ردیف) ؛ بقیه با اسکرول اضافه می‌شوند */
+function startLoad(){}
 document.querySelectorAll('[data-all]').forEach(a=>a.href=ALL_LINKS[a.dataset.all]||'#');
 
 /* اسکرول خودکار عکس بلند داخل فریم: با هاور (دسکتاپ) یا وقتی کارت در دید است (موبایل) */
@@ -590,19 +699,24 @@ function wire(it){it.onmouseenter=()=>play(it,true);it.onmouseleave=()=>play(it,
 
 /* ساخت ردیف‌ها: «همه» = ترکیب رندوم بدون تکرار (هر ردیف سهم جدا) ، حوزه‌ی انتخابی = همه‌ی طرح‌های همان حوزه */
 function render(){
-  const all=curCat==='all',mix=all?mixed():null;
+  const all=curCat==='all';
+  /* «همه» یا «همه‌ی زیرمجموعه‌های یک حوزه» = ترکیب رندوم بدون تکرار ؛ زیرمجموعه‌ی انتخابی = همه‌ی طرح‌های همان پوشه */
+  const grouped=all||(SUBS[curCat]&&!curSub);
+  const pool=all?ALLP:ALLP.filter(p=>p.cat===curCat&&(!curSub||p.sub===curSub));
+  const mix=grouped?mixBy(pool,all?(p=>p.cat):(p=>p.sub||'_')):null;
   ROWS.forEach((t,r)=>{
     const tr=document.getElementById(t),sec=tr.closest('section');
     if(!DEVPATH[t]){sec.style.display='none';return}
     sec.style.display='';
-    const q=all?mix.filter((_,i)=>i%ROWS.length===r):ALLP.filter(p=>p.cat===curCat);
-    const first=q.splice(0,all?PER_ROW:q.length);
+    /* طرح‌هایی که تازه معلوم شده عکس ندارند اصلاً انتخاب نمی‌شوند */
+    const q=(grouped?mix.filter((_,i)=>i%ROWS.length===r):pool.slice()).filter(p=>!skip(p,t));
+    const first=q.splice(0,INIT);
     ST[t]={queue:q};
-    tr.innerHTML=first.map((p,k)=>itemHTML(t,p,t==='phone',k)).join('');
+    tr.innerHTML=first.map((p,k)=>itemHTML(t,p,1,k)).join('');
     tr.querySelectorAll('.item').forEach(wire);
     tr.scrollTo({left:0});
+    ensure(t);
   });
-  startLoad();
 }
 render();
 
@@ -619,12 +733,12 @@ const SUPPORT_PLANS=[
 const PRICE_SHOP='۱۰,۰۰۰,۰۰۰ تومان', PRICE_OTHER='۱۲,۰۰۰,۰۰۰ تومان';
 /* «مناسب برای» هر حوزه */
 const FORWHO={shop:'فروش محصولات و مدیریت سفارش‌ها'};
-function suitFor(p){return FORWHO[p.cat]||p.jobs.join('، ')}
+function suitFor(p){return p.sub?'فروشگاه‌های حوزه‌ی '+p.subLabel+' (فروش محصولات و مدیریت سفارش‌ها)':(FORWHO[p.cat]||p.jobs.join('، '))}
 function mainFeatures(p){
   if(p.cat==='shop')return 'سبد خرید، درگاه پرداخت و مدیریت محصولات';
   return ['نمایش خدمات و محتوا','فرم تماس','پنل مدیریت'].concat(EXTRA[p.cat]||[]).join('، ');
 }
-function typeOf(p){return p.cat==='shop'?'فروشگاه اینترنتی':'سایت '+CATS[p.cat]}
+function typeOf(p){return p.cat==='shop'?'فروشگاه اینترنتی'+(p.subLabel?' – '+p.subLabel:''):'سایت '+CATS[p.cat]}
 function cmsOf(p){
   return p.cat==='shop'
     ? 'وردپرس و ووکامرس'
@@ -681,11 +795,31 @@ document.getElementById('popx').onclick=closePop;
 
 /* Filter */
 const chips=document.getElementById('chips');
-const chipBtn=(k,v,on)=>`<button${on?' class="on"':''} data-c="${k}"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]||ICONS.all}</svg></span>${v}</button>`;
+const chipBtn=(k,v,on)=>`<button${on?' class="on"':''} data-c="${k}"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]||ICONS.all}</svg></span>${v}${SUBS[k]?'<span class="caret" aria-hidden="true">▾</span>':''}</button>`;
 chips.innerHTML='<div class="allrow">'+chipBtn('all','همه',true)+'</div><div class="list">'+Object.entries(CATS).map(([k,v])=>chipBtn(k,v,false)).join('')+'</div>';
 chips.onclick=e=>{const b=e.target.closest('button');if(!b)return;
   chips.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
-  curCat=b.dataset.c;render();};
+  curCat=b.dataset.c;curSub='';renderSubs();render();};
+
+/* تب‌های زیرمجموعه: فقط وقتی حوزه‌ی انتخابی زیرمجموعه داشته باشد باز می‌شود */
+const subsEl=document.getElementById('subs');
+function renderSubs(){
+  const list=SUBS[curCat];
+  if(!list){subsEl.classList.remove('open');subsEl.innerHTML='';return}
+  const btn=(k,v)=>`<button type="button" data-s="${k}"${k===curSub?' class="on"':''}>${v}</button>`;
+  subsEl.innerHTML=`<div class="st">زیرمجموعه‌ی ${CATS[curCat]} را انتخاب کنید</div><div class="sl">`
+    +btn('','همه‌ی '+CATS[curCat])+list.map(x=>btn(x.k,x.label)).join('')+'</div>';
+  subsEl.classList.add('open');
+}
+subsEl.onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  curSub=b.dataset.s;
+  subsEl.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+  render();};
+
+/* اسکرول افقی نزدیک انتها: کارت‌های بعدی اضافه شود */
+document.querySelectorAll('.track').forEach(tr=>tr.addEventListener('scroll',()=>{
+  if(tr.scrollWidth-tr.clientWidth-Math.abs(tr.scrollLeft)<tr.clientWidth*1.3)fill(tr.id,4);
+},{passive:true}));
 
 /* Arrows (RTL-safe) */
 document.querySelectorAll('.arrows button').forEach(b=>b.onclick=()=>{
