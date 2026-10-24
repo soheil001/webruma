@@ -313,11 +313,11 @@ footer{text-align:center;color:var(--mut);font-size:13px;padding:40px 16px 30px}
     .contact-widget .launcher svg { width: 27px; height: 27px; }
     .contact-widget .launcher-ping { width: 11px; height: 11px; border-width: 2px; top: -2px; right: -2px; }
   }
-  /* ایکن چت: همیشه سمت چپ سایت (همه اندازه‌ها) */
-  .contact-widget { left: 24px !important; right: auto !important; }
-  .contact-widget .launcher-wrap { direction: ltr; align-items: flex-start !important; }
-  .contact-widget .contact-panel { transform-origin: bottom left; }
-  @media (max-width: 600px) { .contact-widget { left: 10px !important; } }
+  /* ایکن چت: همیشه سمت راست سایت (همه اندازه‌ها) */
+  .contact-widget { right: 24px !important; left: auto !important; }
+  .contact-widget .launcher-wrap { direction: ltr; align-items: flex-end !important; }
+  .contact-widget .contact-panel { transform-origin: bottom right; }
+  @media (max-width: 600px) { .contact-widget { right: 10px !important; left: auto !important; } }
   @media (prefers-reduced-motion: reduce) {
     .contact-widget, .contact-widget * { transition-duration: .01ms !important; }
   }
@@ -454,6 +454,7 @@ const ICONS = {
 const IMG_BASE='http://fs3.centraldnserver.com/~planlife/pics/webruma/';
 const EXT='webp';          /* پسوند عکس‌ها */
 const PER_CAT=20;          /* تعداد عکس هر پوشه: 1.webp تا 20.webp */
+const INIT=8;  /* تعداد کارت‌هایی که اول هر ردیف فوری لود می‌شود؛ بقیه با اسکرول */
 const PER_ROW=20;          /* تعداد کارت هر ردیف در حالت «همه» (رندوم و بدون تکرار) */
 
 /* پوشه‌ی عکس هر دستگاه (داخل IMG_BASE). فعلاً همه از mobileweb می‌خوانند. '' = آن ردیف مخفی شود */
@@ -602,7 +603,23 @@ let curCat='all',curSub='';
 
 /* اسم‌های ممکن برای پوشه‌ی زیرمجموعه (اولی همان dir است) */
 const dirCands=d=>[...new Set([d,d.toLowerCase(),d.toLowerCase().replace(/\s+/g,'-')])];
+/* حافظه‌ی مرورگر: عکس‌های ناموجود و اسم درست پوشه‌ها یادش می‌ماند تا دفعه‌ی بعد درخواست الکی نرود و انتخاب رندوم سریع‌تر شود */
+const MEM_KEY='wr_img_v2',BAD_TTL=30*60*1000,DIR_TTL=6*3600*1000;
+let MEM={bad:{},dir:{}},memT=0;
+try{const m=JSON.parse(localStorage.getItem(MEM_KEY));if(m&&m.bad&&m.dir)MEM=m}catch(e){}
+(function(){const n=Date.now();for(const k in MEM.bad)if(n-MEM.bad[k]>BAD_TTL)delete MEM.bad[k];for(const k in MEM.dir)if(n-MEM.dir[k][1]>DIR_TTL)delete MEM.dir[k]})();
+function saveMem(){clearTimeout(memT);memT=setTimeout(()=>{try{localStorage.setItem(MEM_KEY,JSON.stringify(MEM))}catch(e){}},500)}
 const SUBCI={};   /* زیرمجموعه ← شماره‌ی اسمی که جواب داده (بعد از اولین عکس موفق ثابت می‌شود) */
+for(const k in MEM.dir)SUBCI[k]=MEM.dir[k][0];
+const SUBFAIL={}; /* شمارنده‌ی شکست‌های کامل هر زیرمجموعه (برای تشخیص پوشه‌ی خالی) */
+const subKey=p=>p.cat+'/'+p.sub;
+const bkey=(p,t)=>(DEVPATH[t]||'')+'|'+p.id;
+const skip=(p,t)=>!!(MEM.bad[bkey(p,t)]||(p.sub&&MEM.bad['sub|'+subKey(p)]));
+function markBad(p,t){
+  MEM.bad[bkey(p,t)]=Date.now();
+  if(p.sub&&SUBCI[subKey(p)]===undefined&&(SUBFAIL[subKey(p)]=(SUBFAIL[subKey(p)]||0)+1)>=3)MEM.bad['sub|'+subKey(p)]=Date.now(); /* پوشه‌ی خالی یا اسم اشتباه */
+  saveMem();
+}
 function srcOf(p,t,ci){
   if(!DEVPATH[t])return '';
   const base=IMG_BASE+DEVPATH[t]+'/'+FOLDERS[p.cat]+'/';
@@ -619,7 +636,7 @@ function ok(im){
   if(!im.isConnected||!im.src||im.src.indexOf('data:')===0)return;
   const it=im.closest('.item');if(!it)return;
   const p=BYID[it.dataset.id];
-  if(p&&p.sub)SUBCI[p.cat+'/'+p.sub]=ciOf(im,p);
+  if(p&&p.sub){const k=subKey(p),c=ciOf(im,p);SUBCI[k]=c;MEM.dir[k]=[c,Date.now()];delete MEM.bad['sub|'+k];saveMem()}
 }
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 
@@ -644,49 +661,34 @@ function bad(im,t){
     if(SUBCI[key]!==undefined&&SUBCI[key]!==cur){im.src=srcOf(pp,t,SUBCI[key]);return}
     if(SUBCI[key]===undefined&&cur+1<max){im.src=srcOf(pp,t,cur+1);return}
   }
-  const nx=ST[t]&&ST[t].queue.shift();
-  if(nx){const d=document.createElement('div');d.innerHTML=itemHTML(t,nx,1);const el=d.firstElementChild;it.replaceWith(el);wire(el)}
+  if(pp)markBad(pp,t);
+  let nx=null;
+  while(ST[t]&&(nx=ST[t].queue.shift())&&skip(nx,t));
+  if(nx){const d=document.createElement('div');d.innerHTML=itemHTML(t,nx,1,0);const el=d.firstElementChild;it.replaceWith(el);wire(el)}
   else it.remove();
 }
+/* اضافه‌کردن کارت‌های بیشتر به انتهای ردیف (فقط وقتی کاربر به انتها نزدیک می‌شود) */
+function fill(t,n){
+  const tr=document.getElementById(t),st=ST[t];if(!tr||!st)return;
+  let a=0,p;
+  while(a<n&&(p=st.queue.shift())){
+    if(skip(p,t))continue;
+    const d=document.createElement('div');d.innerHTML=itemHTML(t,p,1,9);const el=d.firstElementChild;tr.appendChild(el);wire(el);a++;
+  }
+}
+function ensure(t){const tr=document.getElementById(t);let g=0;while(g++<8&&ST[t]&&ST[t].queue.length&&tr.scrollWidth<tr.clientWidth*2)fill(t,2)}
 const PH='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 /* now=1 → عکس همان لحظه لود می‌شود (ردیف موبایل)؛ وگرنه data-src و نوبت‌دهی توسط startLoad */
 function frame(t,s,alt,err,now,k){
-  const img=`<div class="vp"><img ${now?`src="${s}" decoding="async"${k<5?' fetchpriority="high"':''}`:`data-src="${s}" src="${PH}"`} alt="${alt}" onerror="${err}" onload="ok(this)"></div>`;
+  const img=`<div class="vp"><img ${now?`src="${s}" decoding="async"${k<3?' fetchpriority="high"':''}`:`data-src="${s}" src="${PH}"`} alt="${alt}" onerror="${err}" onload="ok(this)"></div>`;
   return t==='phone'?`<div class="phone"><div class="scr">${img}</div></div>`
     :`<div class="${t}"><div class="scr">${img}</div><img class="frm" src="${FR[t]}" alt=""></div>`;
 }
 const itemHTML=(t,p,now,k)=>`<div class="item" tabindex="0" role="button" data-cat="${p.cat}" data-t="${t}" data-id="${p.id}" data-n="${p.n}">${frame(t,srcOf(p,t),p.title,`bad(this,'${t}')`,now,k)}<div class="cap">${p.title}</div></div>`;
 
 /* ===== لود سریع و مرحله‌ای: اول موبایل ، بعد ردیف به ردیف به سمت پایین ===== */
-let gen=0;
-function rowDone(t){
-  const tr=document.getElementById(t);if(!tr)return Promise.resolve();
-  return Promise.all([].map.call(tr.querySelectorAll('.vp img'),(im,k)=>{
-    let s=im.getAttribute('data-src');
-    const it0=im.closest('.item'),pp0=it0&&BYID[it0.dataset.id];
-    if(s&&pp0&&pp0.sub)s=srcOf(pp0,it0.dataset.t);
-    if(s){im.removeAttribute('data-src');im.decoding='async';im.fetchPriority=k<5?'high':'auto';im.src=s}
-    if(im.complete&&im.naturalWidth>1)return;
-    return new Promise(r=>{im.addEventListener('load',r,{once:true});im.addEventListener('error',r,{once:true})});
-  }));
-}
-function startLoad(){
-  const g=++gen,seen={};
-  const go=t=>{if(!seen[t]){seen[t]=rowDone(t)}return seen[t]};
-  /* اگر کاربر زودتر از لود به یک ردیف رسید، همان لحظه لودش می‌کنیم */
-  if('IntersectionObserver' in window){
-    const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&g===gen){go(e.target.id);ob.unobserve(e.target)}}),{rootMargin:'900px 0px'});
-    ROWS.forEach(t=>{const el=document.getElementById(t);if(el&&DEVPATH[t])ob.observe(el)});
-  }
-  (async()=>{
-    for(const t of ROWS){
-      if(g!==gen)return;
-      if(!DEVPATH[t])continue;
-      /* ردیف بعدی وقتی شروع می‌شود که قبلی تمام شده، یا حداکثر ۱.۵ ثانیه گذشته */
-      await Promise.race([go(t),new Promise(r=>setTimeout(r,1500))]);
-    }
-  })();
-}
+/* همه‌ی ردیف‌ها هم‌زمان و بدون صف شروع می‌کنند (فقط چند کارت اول هر ردیف) ؛ بقیه با اسکرول اضافه می‌شوند */
+function startLoad(){}
 document.querySelectorAll('[data-all]').forEach(a=>a.href=ALL_LINKS[a.dataset.all]||'#');
 
 /* اسکرول خودکار عکس بلند داخل فریم: با هاور (دسکتاپ) یا وقتی کارت در دید است (موبایل) */
@@ -706,14 +708,15 @@ function render(){
     const tr=document.getElementById(t),sec=tr.closest('section');
     if(!DEVPATH[t]){sec.style.display='none';return}
     sec.style.display='';
-    const q=grouped?mix.filter((_,i)=>i%ROWS.length===r):pool.slice();
-    const first=q.splice(0,grouped?PER_ROW:q.length);
+    /* طرح‌هایی که تازه معلوم شده عکس ندارند اصلاً انتخاب نمی‌شوند */
+    const q=(grouped?mix.filter((_,i)=>i%ROWS.length===r):pool.slice()).filter(p=>!skip(p,t));
+    const first=q.splice(0,INIT);
     ST[t]={queue:q};
-    tr.innerHTML=first.map((p,k)=>itemHTML(t,p,t==='phone',k)).join('');
+    tr.innerHTML=first.map((p,k)=>itemHTML(t,p,1,k)).join('');
     tr.querySelectorAll('.item').forEach(wire);
     tr.scrollTo({left:0});
+    ensure(t);
   });
-  startLoad();
 }
 render();
 
@@ -812,6 +815,11 @@ subsEl.onclick=e=>{const b=e.target.closest('button');if(!b)return;
   curSub=b.dataset.s;
   subsEl.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
   render();};
+
+/* اسکرول افقی نزدیک انتها: کارت‌های بعدی اضافه شود */
+document.querySelectorAll('.track').forEach(tr=>tr.addEventListener('scroll',()=>{
+  if(tr.scrollWidth-tr.clientWidth-Math.abs(tr.scrollLeft)<tr.clientWidth*1.3)fill(tr.id,4);
+},{passive:true}));
 
 /* Arrows (RTL-safe) */
 document.querySelectorAll('.arrows button').forEach(b=>b.onclick=()=>{
