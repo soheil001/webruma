@@ -141,7 +141,42 @@ body{background:var(--bg);color:var(--fg);font-family:'Gozaar',Tahoma,sans-serif
 .stage .vp::-webkit-scrollbar{display:none}
 .stage .scr .vp img{transform:none!important;transition:none}
 .empty{display:none;text-align:center;color:var(--mut);padding:10px}
-footer{text-align:center;color:var(--mut);font-size:13px;padding:40px 16px 30px}
+/* ===== فوتر ===== */
+.ft{--g:#00ff9c;--cy:#22d3ee;position:relative;margin-top:60px;background:#040a09;color:#b9d6ca;overflow:hidden;direction:rtl;border-radius:28px 28px 0 0}
+.ft::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),var(--cy),var(--g),transparent)}
+.ft::after{content:"";position:absolute;width:620px;height:620px;left:50%;top:-360px;transform:translateX(-50%);background:radial-gradient(circle,#00ff9c1f,transparent 65%);pointer-events:none}
+.ft-in{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:54px clamp(18px,4vw,40px) 0}
+.ft-grid{display:grid;grid-template-columns:1.5fr 1fr 1.2fr;gap:clamp(28px,5vw,64px)}
+.ft-brand b{display:flex;align-items:center;gap:10px;font-size:22px;color:#fff;font-weight:800;letter-spacing:.01em}
+.ft-brand b i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font:700 14px ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:#06130f;background:linear-gradient(135deg,var(--g),var(--cy));box-shadow:0 8px 20px -8px var(--g)}
+.ft-brand p{margin-top:14px;font-size:14px;line-height:2;color:#8fb3a3;max-width:420px}
+.ft-soc{display:flex;gap:10px;margin-top:20px}
+.ft h4{font-size:15px;color:#fff;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ft h4::before{content:"";width:18px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--g),var(--cy))}
+.ft ul{list-style:none;padding:0;display:grid;gap:10px}
+.ft a{color:inherit;text-decoration:none}
+.ft-links a{font-size:14px;color:#9ec2b2;display:inline-flex;align-items:center;gap:8px;transition:color .2s,transform .2s}
+.ft-links a::before{content:"‹";color:var(--g);opacity:.7}
+.ft-links a:hover{color:var(--g);transform:translateX(-4px)}
+.ft-ct a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;border:1px solid #00ff9c1f;background:#00ff9c0a;font-size:14px;color:#d6efe5;transition:border-color .25s,background .25s,transform .25s,box-shadow .25s}
+.ft-ct a:hover{border-color:#00ff9c80;background:#00ff9c14;transform:translateY(-2px);box-shadow:0 10px 24px -14px var(--g)}
+.ft-ct a span.ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;background:#00ff9c14;color:var(--g)}
+.ft-ct a small{display:block;font-size:11.5px;color:#6f9a89;line-height:1.5}
+.ft-ct a bdi{direction:ltr;unicode-bidi:isolate;font-weight:600;letter-spacing:.02em}
+.ft svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ft-soc a{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid #00ff9c33;color:var(--g);background:#06130fcc;transition:background .25s,color .25s,transform .25s,box-shadow .25s}
+.ft-soc a:hover{background:var(--g);color:#06130f;transform:translateY(-3px);box-shadow:0 10px 22px -8px var(--g)}
+.ft-law{margin-top:40px;padding:20px 22px;border-radius:18px;border:1px solid #00ff9c26;background:linear-gradient(135deg,#00ff9c0d,#22d3ee08)}
+.ft-law h5{display:flex;align-items:center;gap:8px;font-size:14.5px;color:#fff;font-weight:700;margin-bottom:8px}
+.ft-law h5 svg{color:var(--g);flex:none}
+.ft-law p{font-size:13px;line-height:2.05;color:#8fb3a3;text-align:justify}
+.ft-law p b{color:#d6efe5;font-weight:600}
+.ft-bar{margin-top:28px;border-top:1px solid #00ff9c1f;padding:18px 0 22px;display:flex;justify-content:space-between;align-items:center;gap:10px 20px;flex-wrap:wrap;font-size:12.5px;color:#6f9a89}
+.ft-bar .mono{font:500 12px ui-monospace,Menlo,Consolas,monospace;color:#3fa57e;direction:ltr}
+.ft-top{position:absolute}
+.ft a:focus-visible{outline:2px solid var(--cy);outline-offset:3px}
+@media(max-width:900px){.ft-grid{grid-template-columns:1fr 1fr}.ft-brand{grid-column:1/-1}}
+@media(max-width:600px){.ft{border-radius:22px 22px 0 0;margin-top:44px}.ft-in{padding-top:40px}.ft-grid{grid-template-columns:1fr;gap:30px}.ft-links ul{grid-template-columns:1fr 1fr;gap:8px 14px}.ft-links a{font-size:13.5px}.ft-law{padding:16px}.ft-law p{text-align:right}.ft-bar{justify-content:center;text-align:center;padding-bottom:88px}}
 @media(max-width:600px){.phone{width:190px}.laptop{width:360px}.tablet{width:290px}.monitor{width:340px}.laptop,.monitor{width:74vw}.track{gap:16px;padding-inline:16px}}
 /* فونت پارستو فقط برای پاپ‌آپ نمونه‌کار و پاپ‌آپ پلن‌ها (مشخصات سایت) */
 .pop,.pl{font-family:'Parastoo','Gozaar',Tahoma,sans-serif}
@@ -429,7 +464,51 @@ btn.<span class="t">addEventListener</span>(<span class="s">'click'</span>, () =
 
 <div class="pl" id="pl" aria-hidden="true"><div class="box" role="dialog" aria-modal="true"><button class="px" id="plx" aria-label="بستن">✕</button><div id="plc"></div></div></div>
 
-<footer>© نمونه کارها</footer>
+<footer class="ft" id="footer">
+  <div class="ft-in">
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <b><i>&lt;/&gt;</i>وب‌روما</b>
+        <p>طراحی و توسعه‌ی وب‌سایت، نرم‌افزار و ابزارهای ترمینالی، متناسب با کسب‌وکار شما؛ سریع، ریسپانسیو و با کیفیت. نمونه‌کارهای بالا بخشی از پروژه‌های انجام‌شده‌ی ماست.</p>
+        <div class="ft-soc">
+          <a href="https://t.me/planlifeir" target="_blank" rel="noopener noreferrer" aria-label="تلگرام"><svg viewBox="0 0 24 24"><path d="M21.5 3.5 2.8 10.7c-.8.3-.8 1.4 0 1.7l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.4 4.7 3.5c.6.4 1.4.1 1.6-.6l3.2-15.1c.2-.9-.7-1.6-1.4-1.3Z"/><path d="m7.4 14 10.2-6.4"/></svg></a>
+          <a href="https://wa.me/905437333582" target="_blank" rel="noopener noreferrer" aria-label="واتساپ"><svg viewBox="0 0 24 24"><path d="M3 21l1.5-4.6A8.5 8.5 0 1 1 8 19.6L3 21Z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .8c-.9-.4-1.7-1.2-2.1-2.1l.8-1-1-2L9 8.5Z"/></svg></a>
+          <a href="tel:+989393070984" aria-label="تماس تلفنی"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg></a>
+        </div>
+      </div>
+      <nav class="ft-links" aria-label="دسترسی سریع">
+        <h4>دسترسی سریع</h4>
+        <ul>
+          <li><a href="#vs">صفحه‌ی اول</a></li>
+          <li><a href="#chips">حوزه‌های کاری</a></li>
+          <li><a href="#phone">نسخه موبایل</a></li>
+          <li><a href="#monitor">نسخه مانیتور</a></li>
+          <li><a href="#laptop">نسخه دسکتاپ</a></li>
+          <li><a href="#tablet">نسخه تبلت</a></li>
+        </ul>
+      </nav>
+      <div class="ft-ct">
+        <h4>ارتباط با ما</h4>
+        <ul>
+          <li><a href="tel:+989393070984"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg></span><span><small>تماس تلفنی</small><bdi>0939 307 0984</bdi></span></a></li>
+          <li><a href="https://wa.me/905437333582" target="_blank" rel="noopener noreferrer"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 21l1.5-4.6A8.5 8.5 0 1 1 8 19.6L3 21Z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .8c-.9-.4-1.7-1.2-2.1-2.1l.8-1-1-2L9 8.5Z"/></svg></span><span><small>واتساپ</small><bdi>+90 543 733 3582</bdi></span></a></li>
+          <li><a href="https://t.me/planlifeir" target="_blank" rel="noopener noreferrer"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21.5 3.5 2.8 10.7c-.8.3-.8 1.4 0 1.7l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.4 4.7 3.5c.6.4 1.4.1 1.6-.6l3.2-15.1c.2-.9-.7-1.6-1.4-1.3Z"/></svg></span><span><small>تلگرام</small><bdi>@planlifeir</bdi></span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-law" role="note">
+      <h5><svg viewBox="0 0 24 24"><path d="M12 3v18M5 7h14M5 7l-2.5 7a3.5 3.5 0 0 0 5 0L5 7ZM19 7l-2.5 7a3.5 3.5 0 0 0 5 0L19 7ZM8 21h8"/></svg>اعلامیه‌ی حقوقی و حق کپی‌رایت</h5>
+      <p>تمامی محتوای این وب‌سایت، شامل <b>نمونه‌کارها، تصاویر، ویدیوها، طرح‌ها و رابط‌های کاربری، کدها، لوگو، متون و عناصر گرافیکی</b>، اثر فکری و مالکیت انحصاری «وب‌روما» یا کارفرمایان مربوطه است و مشمول <b>قانون حمایت از حقوق مؤلفان، مصنفان و هنرمندان</b> و سایر قوانین مرتبط جمهوری اسلامی ایران قرار دارد. هرگونه <b>کپی‌برداری، بازنشر، اسکرین‌شات‌برداری برای استفاده‌ی تجاری، الگوبرداری عیناً یا با تغییر جزئی، فروش یا واگذاری</b> هر بخش از آن، بدون کسب مجوز کتبی پیشین، ممنوع بوده و پیگرد حقوقی و کیفری دارد. برای استفاده یا همکاری، از راه‌های ارتباطی بالا با ما تماس بگیرید.</p>
+    </div>
+
+    <div class="ft-bar">
+      <span>© <span id="ftYear">2026</span> وب‌روما — تمامی حقوق محفوظ است.</span>
+      <span class="mono">&lt;made with ♥ by webruma /&gt;</span>
+    </div>
+  </div>
+</footer>
+<script>try{document.getElementById('ftYear').textContent=new Date().toLocaleDateString('fa-IR-u-nu-latn',{year:'numeric'}).split('/')[0]||new Date().getFullYear()}catch(e){}</script>
 
 
 <script>
