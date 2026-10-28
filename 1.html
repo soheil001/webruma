@@ -407,7 +407,7 @@ body{background:var(--bg);color:var(--fg);font-family:'Gozaar',Tahoma,sans-serif
 .pop{padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom));align-items:center;justify-content:center;overflow:hidden}
 .dlg{display:flex;flex-direction:column;width:min(480px,100%);max-height:min(88vh,780px);max-height:min(88dvh,780px);padding:0;overflow:hidden;margin:0;border:1px solid var(--line);box-shadow:0 40px 80px -30px #000c}
 .x{top:10px;left:10px;width:32px;height:32px;font-size:13px;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.stage{flex:none;min-height:0;margin:0;border-radius:0;padding:16px 0 8px;height:clamp(150px,26vh,210px);box-sizing:border-box;overflow:hidden;align-items:center;background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--acc) 14%,var(--bg)),var(--bg))}
+.stage{flex:none;min-height:0;margin:0;border-radius:0;padding:14px 0 10px;height:clamp(230px,38vh,340px);box-sizing:border-box;overflow:hidden;align-items:center;background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--acc) 14%,var(--bg)),var(--bg))}
 .stage .phone{width:auto;height:100%;aspect-ratio:9/16}
 .stage .tablet{width:auto;height:100%;aspect-ratio:905/931}
 .stage .laptop{width:auto;height:100%;aspect-ratio:520/360}
@@ -424,8 +424,14 @@ body{background:var(--bg);color:var(--fg);font-family:'Gozaar',Tahoma,sans-serif
 .tbl caption{padding:11px 16px;font-size:14px;letter-spacing:.2px;background:linear-gradient(135deg,var(--acc),color-mix(in srgb,var(--acc) 50%,#0b0c1e));border-bottom:1px solid rgba(255,255,255,.12)}
 .tbl th,.tbl td{padding:10px 14px;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
 .tbl tbody tr:nth-child(even){background:color-mix(in srgb,var(--acc) 5%,transparent)}
-.tbl th{width:38%;font-size:12.5px;font-weight:600;color:var(--mut);border-left:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
-.tbl td{font-size:13px;font-weight:600;color:var(--fg);line-height:1.8}
+.tbl th{width:38%;font-size:13px;font-weight:700;color:color-mix(in srgb,var(--acc) 45%,var(--fg));border-left:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.tbl td{font-size:14px;font-weight:700;color:var(--fg);line-height:1.8}
+.tbl td small{color:color-mix(in srgb,var(--fg) 72%,var(--bg));font-weight:500;font-size:12.5px}
+.tbl td b,.tbl td span{color:inherit}
+.ok{color:#19e0a3}.no{color:color-mix(in srgb,var(--fg) 70%,var(--bg))}
+.price{color:color-mix(in srgb,var(--acc) 55%,var(--fg))}
+.badge{color:#ffb84a}.badge.done{color:#19e0a3}
+.plbtn{color:color-mix(in srgb,var(--acc) 40%,var(--fg))}
 .tbl th .ti{--h:255;width:26px;height:26px;margin-left:8px;font-size:13px;border-radius:8px;background:hsl(var(--h) 80% 60%/.16);box-shadow:inset 0 0 0 1px hsl(var(--h) 80% 60%/.25)}
 .tbl tbody tr:nth-child(5n+1) .ti{--h:255}.tbl tbody tr:nth-child(5n+2) .ti{--h:195}.tbl tbody tr:nth-child(5n+3) .ti{--h:150}.tbl tbody tr:nth-child(5n+4) .ti{--h:35}.tbl tbody tr:nth-child(5n) .ti{--h:330}
 .price{font-size:15px}
@@ -435,15 +441,14 @@ body{background:var(--bg);color:var(--fg);font-family:'Gozaar',Tahoma,sans-serif
 .call:active{transform:scale(.98)}
 @media(max-width:600px){
  .dlg{width:100%;max-height:90vh;max-height:90dvh;border-radius:22px}
- .stage{height:clamp(130px,22vh,180px)}
- .dlg{max-height:82vh;max-height:82dvh}
+ .stage{height:clamp(250px,40vh,330px)}
+ .dlg{max-height:90vh;max-height:90dvh}
  .tbl,.tbl tbody{display:block}
- .tbl tr{display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:8px}
- .tbl th,.tbl td{display:block;width:auto;border:0}
- .tbl th{padding:9px 12px 9px 0;white-space:nowrap;font-size:12px}
- .tbl td{padding:9px 0 9px 12px;font-size:12.5px;line-height:1.7}
- .tbl th,.tbl td{background:none}
- .tbl tbody tr{border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+ .tbl tr{display:block;padding:12px 14px 13px}
+ .tbl th,.tbl td{display:block;width:auto;border:0;background:none}
+ .tbl th{padding:0 0 6px;font-size:13px;display:flex;align-items:center}
+ .tbl td{padding:0 36px 0 0;font-size:14px;line-height:1.9}
+ .tbl tbody tr{border-bottom:1px solid color-mix(in srgb,var(--acc) 18%,var(--line))}
  .tbl tbody tr:last-child{border-bottom:0}
  .tbl caption{display:block}
 }
