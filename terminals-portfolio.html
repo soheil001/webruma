@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نمونه کار ترمینال‌ها</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#17151c; --card:#201e27; --line:#34313d; --text:#ece9f2; --muted:#9a95a8; --accent:#ffa03c; --stage:#2a2830; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,Tahoma,sans-serif;line-height:1.7}
+  header{max-width:1500px;margin:0 auto;padding:40px 20px 6px}
+  header h1{margin:0;font-size:1.8rem;font-weight:800}
+  header p{margin:4px 0 0;color:var(--muted)}
+
+  /* هر ترمینال یک کارت مربعی؛ کارت‌ها کنار هم و در صورت کمبود جا، پایین‌تر می‌روند */
+  .grid{
+    max-width:1500px;margin:0 auto;padding:20px;
+    display:grid;gap:22px;
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));
+  }
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+  .bar h2{margin:0;font-size:1rem;font-weight:600}
+  .bar button{font:inherit;font-size:.8rem;color:var(--text);background:transparent;border:1px solid var(--line);border-radius:8px;padding:4px 12px;cursor:pointer}
+  .bar button:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* نسبت پیش‌فرض ۱:۱ چون ترمینال‌ها مربعی‌اند. برای ترمینال دیگر: style="--ar:16/9" */
+  .frame{background:var(--stage);aspect-ratio:var(--ar,1/1);width:100%}
+  iframe{display:block;width:100%;height:100%;border:0}
+
+  /* ترمینال بزرگ‌تر: class="card big" ← دو ستون جا می‌گیرد */
+  .card.big{grid-column:span 2}
+  @media (max-width:900px){ .card.big{grid-column:auto} }
+
+  /* تمام‌صفحه داخل همین صفحه */
+  .card.full{position:fixed;inset:0;z-index:50;border-radius:0}
+  .card.full .frame{aspect-ratio:auto;flex:1;height:auto}
+  body.lock{overflow:hidden}
+</style>
+</head>
+<body>
+<header>
+  <h1>نمونه کار ترمینال‌ها</h1>
+  <p>روی هر ترمینال کلیک کنید و همان‌جا با آن کار کنید؛ برای نمای بزرگ‌تر «تمام‌صفحه» را بزنید.</p>
+</header>
+
+<main class="grid">
+  <section class="card">
+    <div class="bar"><h2>ترمینال ۱۱</h2><button data-full>تمام‌صفحه</button></div>
+    <div class="frame"><iframe loading="lazy" title="ترمینال ۱۱" src="https://webruma.ir/terminal/11.html"></iframe></div>
+  </section>
+
+  <section class="card">
+    <div class="bar"><h2>MPC 2000</h2><button data-full>تمام‌صفحه</button></div>
+    <div class="frame"><iframe loading="lazy" title="MPC 2000" src="https://webruma.ir/terminal/mpc2000.html"></iframe></div>
+  </section>
+
+  <section class="card">
+    <div class="bar"><h2>رادیو WC7A</h2><button data-full>تمام‌صفحه</button></div>
+    <div class="frame"><iframe loading="lazy" title="رادیو WC7A" src="https://webruma.ir/terminal/radio/wc7a-radio.html"></iframe></div>
+  </section>
+
+  <section class="card">
+    <div class="bar"><h2>اسیلوسکوپ 7613</h2><button data-full>تمام‌صفحه</button></div>
+    <div class="frame"><iframe loading="lazy" title="اسیلوسکوپ 7613" src="https://webruma.ir/terminal/oscilloscope_7613.html"></iframe></div>
+  </section>
+</main>
+
+<script>
+  function closeFull(){
+    document.querySelectorAll('.card.full').forEach(function(c){
+      c.classList.remove('full'); c.querySelector('[data-full]').textContent='تمام‌صفحه';
+    });
+    document.body.classList.remove('lock');
+  }
+  document.querySelectorAll('[data-full]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var card=btn.closest('.card'), open=card.classList.contains('full');
+      closeFull();
+      if(!open){card.classList.add('full');document.body.classList.add('lock');btn.textContent='بستن';}
+    });
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeFull();});
+</script>
+</body>
+</html>
